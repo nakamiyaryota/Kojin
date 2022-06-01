@@ -21,7 +21,6 @@ void GameObject::Change3D()
 void GameObject::Change2D()
 {
 	m_Cpos = m_mWorld.Translation();
-	//SetPos(Math::Vector3(0, m_mWorld._42, m_mWorld._43));
 
 	Math::Matrix scale = Math::Matrix::CreateScale(100.0f, 1.0f, 1.0f);
 	m_mWorld *= scale;
@@ -60,15 +59,11 @@ bool GameObject::CheckCollisionBump(const SphereInfo& info, BumpResult& result, 
 
 bool GameObject::CheckCollisionBump(const RayInfo& info, BumpResult& result)
 {
-	// 相手のモデルの中から
-	//const std::shared_ptr<KdMesh>& spMesh = m_modelWork.GetDataNodes()[0].m_spMesh;
-
 	float minDist = FLT_MAX;
 
 	// 全てのメッシュと当たり判定をする
 	KdRayResult rayResult;
 
-	//for (const KdModelData::Node& dataNode : m_modelWork.GetDataNodes())
 	for (UINT i = 0; i < m_modelWork.GetDataNodes().size(); ++i)
 	{
 		const KdModelData::Node& dataNode = m_modelWork.GetDataNodes()[i];

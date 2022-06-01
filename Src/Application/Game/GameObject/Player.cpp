@@ -1,9 +1,5 @@
 ﻿#include "Player.h"
-
-#include "../GameSystem.h"
-#include "../Camera/FPSCamera.h"
 #include "../Camera/TPSCamera.h"
-
 #include "Effect2D.h"
 
 const float Player::s_limitOfStepHeight = 0.5f;
@@ -31,26 +27,24 @@ void Player::Init()
 	GameSystem::GetInstance().SetCamera(m_spCamera);
 
 	m_spCamera->Init();
+	
 	m_spCamera->SetProjectionMatrixOrth();
-
-	m_spCamera->SetLocalPos(Math::Vector3(0.0f, 0.0f, -6.0f));
-
+	m_spCamera->SetLocalPos(Math::Vector3(1.0f, 2.0f, -1000.0f));
+	m_spCamera->SetLocalRotX(0.0f);
+	m_spCamera->SetLocalRotY(-90.0f);
 	m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 0.0f, 0.0f));
 
 	// HIT半径を設定
 	m_bumpSphereInfo.m_radius = 0.3f;
 	m_bumpSphereInfo.m_pos.y = 0.7f;
-
-	// 丸影テクスチャ読み込み
-	m_SpShadow = std::make_shared<Effect2D>();
-	m_SpShadow->Init();
-	m_SpShadow->SetPos(GetPos());
-	m_SpShadow->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/SimpleShadow.png"));
-
 }
 
 void Player::Update()
 {
+	if (!m_isAlive) { return; }
+
+	if (GameSystem::GetInstance().GetSceneName() == "Clear") { return; }
+
 	// 重力を加算
 	m_verticalMovement += GameSystem::s_worldGravity;
 
@@ -98,36 +92,92 @@ void Player::Update()
 	// 座標が正しい位置に確定した後に行う
 	UpdateWorldMatrix();
 
-
+	// 落下判定
 	if (m_worldPos.y < -10)
 	{
 		m_life = 0;
 	}
 
+	// 死亡判定
+	if (m_life < 1)
+	{
+		m_isAlive = false;
+	}
+
+	// 死亡した時の処理
+	if (!m_isAlive)
+	{
+		if (GameSystem::GetInstance().GetSceneName() == "Title")
+		{
+			SetPos(Math::Vector3::Zero);
+			m_life = 3;
+			m_isAlive = true;
+		}
+		// ゲームオーバー画面へ移行
+		if (GameSystem::GetInstance().GetSceneName() == "Game")
+		{
+			Player::Change2D();
+			GameSystem::GetInstance().RequestChangeScene("Result");
+		}
+	}
+
+	// カメラ切り替え、追従
 	if (m_spCamera)
 	{
 
 		m_spCamera->Update();
 
+		bool a = false;
+
 		if (m_change)
 		{
-			m_spCamera->SetProjectionMatrix(60.0f);
-			m_spCamera->SetLocalPos(Math::Vector3(0.0f, 0.0f, -5.0f));
-			m_spCamera->SetLocalRotX(15);
-			m_spCamera->SetLocalRotY(0);
-			m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 1.0f, 0.0f));
+			cameraRotY += 3.0f;
+			if (cameraRotY >= 0.0f)
+			{
+				cameraRotY = 0.0f;
+			}
+
+			m_spCamera->SetLocalRotY(cameraRotY);
 		}
 		if (!m_change)
 		{
-			m_spCamera->SetProjectionMatrixOrth();
-			m_spCamera->SetLocalPos(Math::Vector3(0.0f, 2.0f, -1000.0f));
-			m_spCamera->SetLocalRotX(0);
-			m_spCamera->SetLocalRotY(-90);
-			m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 0.0f, 0.0f));
+			cameraRotY -= 90.0f;
+			if (cameraRotY <= -90.0f)
+			{
+				cameraRotY = -90.0f;
+				a = true;
+			}
+			
+			GameSystem::GetInstance().RequestStartFlg(a);
+			m_spCamera->SetLocalRotY(cameraRotY);
 		}
 
-		Math::Matrix trans = Math::Matrix::CreateTranslation(m_worldPos.x * 0.5f, m_worldPos.y, m_worldPos.z);
-
+		Math::Matrix trans;
+		
+		// 追従の範囲
+		if (!m_change)
+		{
+			if (m_worldPos.y >= 1.5f)
+			{
+				trans = Math::Matrix::CreateTranslation(m_worldPos.x * 0.5f, m_worldPos.y - 1.5f, m_worldPos.z);
+			}
+			else
+			{
+				trans = Math::Matrix::CreateTranslation(m_worldPos.x * 0.5f, 0.0f, m_worldPos.z);
+			}
+		}
+		if (m_change)
+		{
+			if (m_worldPos.y >= -0.1f)
+			{
+				trans = Math::Matrix::CreateTranslation(m_worldPos.x * 0.5f, m_worldPos.y, m_worldPos.z);
+			}
+			else
+			{
+				trans = Math::Matrix::CreateTranslation(m_worldPos.x * 0.5f, 0.0f, m_worldPos.z);
+			}
+		}
+		
 		// プレイヤー追従カメラの位置
 		// キャラクターから見たカメラの位置にプレイヤーの位置を合成したもの
 		m_spCamera->SetCameraMatrix(trans);
@@ -136,16 +186,8 @@ void Player::Update()
 	// プレイヤーから乗ってるオブジェクトへの相対的な行列を作成する
 	UpdateLocalFromRide();
 
-	if (m_life < 1)
-	{
-		m_isAlive = false;
-	}
-
-	if (!m_isAlive)
-	{
-		GameSystem::GetInstance().RequestChangeScene("Result");
-	}
-
+	
+	// 無敵時間
 	if (m_enemyHit)
 	{
 		m_invincibleTime--;
@@ -159,6 +201,8 @@ void Player::Update()
 
 void Player::Draw()
 {
+	if (!m_isAlive) { return; }
+
 	if (!m_enemyHit)
 	{
 		SHADER->m_standardShader.DrawModel(m_modelWork, m_mWorld);
@@ -167,6 +211,8 @@ void Player::Draw()
 
 void Player::DrawTranslucent()
 {
+	if (!m_isAlive) { return; }
+
 	if (m_enemyHit)
 	{
 		SHADER->m_translucentShader.DrawModel(m_modelWork, m_mWorld);
@@ -176,6 +222,8 @@ void Player::DrawTranslucent()
 void Player::Draw2D()
 {
 	if (!m_spLimitTex) { return; }
+
+	if (GameSystem::GetInstance().GetSceneName() != "Game") { return; }
 
 	// ビューポートを利用して解像度を得る
 	Math::Viewport vp;
@@ -205,57 +253,51 @@ void Player::Draw2D()
 	posX = static_cast<int>(-(vp.width * 0.5f) + (m_spLimitTex.get()->GetWidth() * 0.5f));
 	posY = static_cast<int>((vp.height * 0.5f) - (m_spLimitTex.get()->GetHeight() * 0.5f));
 
-	//SHADER->m_spriteShader.DrawTex(m_spLimitTex.get(), posX + 10, posY - 120);
+	SHADER->m_spriteShader.DrawTex(m_spLimitTex.get(), posX + 10, posY - 120);
 
-	Math::Color  color ;//= { 0.7f, 0.7f, 1.0f, 1.0f }
+	Math::Color color = { (1.0f - (m_changeTime * 0.001f)), 0.8f, (1.0f - (m_changeTime * 0.001f)), 1.0f };
 
 	for (int i = 1; i < 45; i++)
 	{
-		color = { (1.0f - (m_changeTime / 1200)), 0.0f, (m_changeTime / 1200), 1.0f };
-		//SHADER->m_spriteShader.DrawLine(-622, 232 - i, int(-622 + (m_changeTime * 0.236)), 232 - i, &color);
+		SHADER->m_spriteShader.DrawLine(-622, 232 - i, int(-622 + (m_changeTime * 0.236)), 232 - i, &color);
 	}
 
-	
-
-	if (!m_hit)
-	{
-		color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	}
-	else
-	{
-		color = { 1.0f, 0.0f, 0.0f, 1.0f };
-	}
-	//SHADER->m_spriteShader.DrawBox(550, 250, 50, 50, &color);
 }
 
-void Player::DrawEffect()
+void Player::Change3D()
 {
-	if (!m_SpShadow) { return; }
+	m_worldPos.x = m_Cpos.x;
+	
+	if (!m_change)
+	{
+		m_spCamera->SetProjectionMatrix(60.0f);
+		m_spCamera->SetLocalPos(Math::Vector3(0.0f, 0.0f, -5.0f));
+		m_spCamera->SetLocalRotX(15.0f);
+		m_spCamera->SetLocalRotY(0.0f);
+		m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 1.0f, 0.0f));
+	}
 
-	// 描画用の行列
-	Math::Matrix mDraw;
+	m_change = true;
+}
 
-	// 拡大
-	Math::Vector3 scale = Math::Vector3::One;
-	mDraw = Math::Matrix::CreateScale(scale);
+void Player::Change2D()
+{
+	m_Cpos = m_mWorld.Translation();
 
-	// 回転
-	mDraw *= Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
+	if (m_change)
+	{
+		m_spCamera->SetProjectionMatrixOrth();
+		m_spCamera->SetLocalPos(Math::Vector3(1.0f, 2.0f, -1000.0f));
+		m_spCamera->SetLocalRotX(0.0f);
+		m_spCamera->SetLocalRotY(-90.0f);
+		m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 0.0f, 0.0f));
+	}
 
-	// 移動
-	Math::Vector3 _pos = m_ShadowPos;  //m_ShadowPos;
-	Math::Vector3 _lightDir = SHADER->m_cb8_Light.Work().DL_Dir;
-	_lightDir.y = 0;
-	_pos += _lightDir * m_ShadowDistance;
-
-	mDraw.Translation(_pos);
-
-	//SHADER->m_effectShader.DrawSquarePolygon(m_SpShadow->GetPolyData(), mDraw);
+	m_change = false;
 }
 
 void Player::Release()
 {
-	//KdSafeDelete(m_pCamera);
 	m_spCamera.reset(); // 参照カウンタ減らす
 }
 
@@ -298,6 +340,8 @@ void Player::UpdateMove(Math::Vector3& dstMove)
 	m_worldPos += moveVec;
 
 	dstMove = moveVec;
+
+	
 }
 
 void Player::UpdateRotate(const Math::Vector3& srcMove)
@@ -354,7 +398,6 @@ void Player::UpdatePosFromRideObj()
 
 		m_worldPos.y = (m_mLocalFromRide * spObject->GetMatrix()).Translation().y;
 		m_worldPos.z = (m_mLocalFromRide * spObject->GetMatrix()).Translation().z;
-
 	}
 }
 
@@ -463,7 +506,33 @@ void Player::UpdateCollision()
 		bool result = spObject->CheckCollisionBump(sphereInfo, bumpResult);
 		if (result)
 		{
+			if (GameSystem::GetInstance().GetSceneName() != "Game") { return; }
+			Player::Change2D();
+			m_worldRot.y = 90.0f;
 			GameSystem::GetInstance().RequestChangeScene("Clear");
+		}
+	}
+
+	// 看板との当たり判定
+	for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
+	{
+		if (spObject->GetClassID() != GameObject::eSignboard) {
+			continue;
+		}
+
+		Math::Vector3 rayPos = m_prevPos;
+		rayPos.y += s_limitOfStepHeight;
+
+		RayInfo rayInfo(rayPos, Math::Vector3(0.0f, -1.0f, 0.0f), m_verticalMovement + s_limitOfStepHeight);
+		SphereInfo sphereInfo(GetPos() + m_bumpSphereInfo.m_pos, m_bumpSphereInfo.m_radius);
+		BumpResult bumpResult;
+
+		// 自分と当たる対象に呼び出してもらう
+		bool result = spObject->CheckCollisionBump(sphereInfo, bumpResult);
+		if (result)
+		{
+			GameSystem::GetInstance().SetStageNumber(spObject->GetNumber());
+			GameSystem::GetInstance().RequestChangeScene("Game");
 		}
 	}
 
@@ -495,9 +564,6 @@ void Player::UpdateCollision()
 		{
 			// 押し戻す処理
 			m_worldPos += bumpResult.m_pushVec;
-			m_ShadowPos = bumpResult.m_HitPos;
-			m_ShadowPos.y += 0.01f;
-			m_ShadowDistance = 0;
 
 			m_verticalMovement = 0.0f;
 			m_canJump = true;
@@ -505,21 +571,10 @@ void Player::UpdateCollision()
 			m_isLanding = true;
 			m_wpRideObj = spObject;
 		}
-		// 下記は地面と接触していない時に処理される
-		else
-		{
-			RayInfo rayInfo(rayPos, Math::Vector3(0.0f, -1.0f, 0.0f), 1000.0f);
-			BumpResult bumpResult;
-
-			// 相手に当たり判定を呼ばせる
-			spObject->CheckCollisionBump(rayInfo, bumpResult);
-			if (bumpResult.m_isHit)
-			{
-				m_ShadowDistance = std::clamp(bumpResult.m_Distance - s_limitOfStepHeight, 0.0f, 1000.0f);
-			}
-		}
 	}
 
+
+	// オブジェクト透過判定
 	m_hit = false;
 
 	if (m_change)
@@ -559,6 +614,68 @@ void Player::UpdateCollision()
 			spObject->SetHit(false);
 		}
 	}
+
+	// 隣にオブジェクトがあれば2Dにできない
+	m_objectHit = false;
+
+	if (m_change)
+	{
+		for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
+		{
+			if (spObject->GetClassID() != GameObject::eStage &&
+				spObject->GetClassID() != GameObject::eStageObject &&
+				spObject->GetClassID() != GameObject::eStageObjectFix &&
+				spObject->GetClassID() != GameObject::eLift &&
+				spObject->GetClassID() != GameObject::eEnemy) {
+				continue;
+			}
+
+			Math::Vector3 rayPos = GetPos();
+			rayPos.y = GetPos().y + 0.1f;
+
+			{
+				RayInfo rayInfo(rayPos, Math::Vector3(1.0f, 0.0f, 0.0f), 13.0f);
+
+				BumpResult bumpResult;
+
+				spObject->CheckCollisionBump(rayInfo, bumpResult);
+
+				if (bumpResult.m_isHit)
+				{
+					m_objectHit = true;
+				}
+				GameSystem::GetInstance().RequestChangeFlg(m_objectHit);
+			}
+
+			{
+				RayInfo rayInfo(rayPos, Math::Vector3(-1.0f, 0.0f, 0.0f), 13.0f);
+
+				BumpResult bumpResult;
+
+				spObject->CheckCollisionBump(rayInfo, bumpResult);
+
+				if (bumpResult.m_isHit)
+				{
+					m_objectHit = true;
+				}
+				GameSystem::GetInstance().RequestChangeFlg(m_objectHit);
+			}
+		}
+	}
+	if (!m_change)
+	{
+		for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
+		{
+			if (spObject->GetClassID() != GameObject::eStage &&
+				spObject->GetClassID() != GameObject::eStageObject &&
+				spObject->GetClassID() != GameObject::eStageObjectFix &&
+				spObject->GetClassID() != GameObject::eLift&&
+				spObject->GetClassID() != GameObject::eEnemy) {
+				continue;
+			}
+			GameSystem::GetInstance().RequestChangeFlg(false);
+		}
+	}
 }
 
 void Player::UpdateWorldMatrix()
@@ -582,8 +699,6 @@ void Player::Update2D()
 
 	m_changeTime++;
 	
-	m_limit = false;
-
 	if (m_changeTime >= MAX_TIME)
 	{
 		m_changeTime = MAX_TIME;
@@ -593,15 +708,20 @@ void Player::Update2D()
 
 void Player::Update3D()
 {
-	//m_changeTime--;
+	if (GameSystem::GetInstance().GetSceneName() != "Game") { return; }
+
+	m_changeTime--;
 	
-	m_limit = false;
+	// ゲージが無くなったらダメージを受ける
 	if (m_changeTime <= MIN_TIME)
 	{
-		//m_changeTime = MIN_TIME;
+		m_changeTime = MIN_TIME;
 		m_changeTime = MAX_TIME;
+
+		std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
+		spSoundInstance = GameSystem::GetInstance().WorkAudioManager().Play("Data/Sounds/dmg01.wav");
+		spSoundInstance->SetVolume(0.2f);
+
 		m_life -= 1;
-		//m_limit = true;
-		//GameInstance.RequestChange(m_limit);
 	}
 }

@@ -7,15 +7,9 @@ void Arrow::Init()
 {
 	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/Enemy/Arrow/Arrow.gltf"));
 
-	m_mWorld = Math::Matrix::CreateTranslation({ 0.0f, 1.0f, 0.0f });
-
 	m_lifeSpan = 180;
 
 	m_bumpSphereInfo.m_radius = 0.25f;
-
-	m_trail.SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Enemy/Trail.png"));
-	m_trail.SetWidth(0.05f);
-	m_trail.SetPattern(KdTrailPolygon::Trail_Pattern::eBillboard);
 }
 
 void Arrow::Update()
@@ -28,28 +22,21 @@ void Arrow::Update()
 	// ˆÚ“®‚·‚é‘O‚ÌˆÊ’u‚ðŠo‚¦‚é
 	m_prevPos = m_mWorld.Translation();
 
+
 	Math::Vector3 move = m_mWorld.Backward();
 	move.Normalize();
 
-	move *= 0.08f;
+	move *= 0.05f;
 
 	Math::Matrix trans = Math::Matrix::CreateTranslation(move);
 
 	m_mWorld *= trans;
 
 	UpdateCollision();
-
-	m_trail.AddPoint(m_mWorld);
-
-	if (m_trail.GetNumPoints() > 30)
-	{
-		m_trail.DelPoint_Back();
-	}
 }
 
 void Arrow::DrawEffect()
 {
-	SHADER->m_effectShader.DrawTrailPolygon(m_trail);
 }
 
 void Arrow::Change3D()

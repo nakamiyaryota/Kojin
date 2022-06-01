@@ -51,7 +51,8 @@ public:
 		eStageObject,
 		eStageObjectFix,
 		eLift,
-		eGoal
+		eGoal,
+		eSignboard
 	};
 
 	GameObject() {}
@@ -60,7 +61,7 @@ public:
 	virtual void Init() {}
 	virtual void Update() {}
 	virtual void Draw();
-	virtual void DrawTranslucent() {}
+	virtual void DrawTranslucent() {} // 半透明描画
 	virtual void DrawEffect() {}
 	virtual void Draw2D() {}
 	virtual void Change3D(); // 3Dモードのチェンジした時に行う処理
@@ -102,6 +103,8 @@ public:
 	bool CheckCollisionBump(const RayInfo& info, BumpResult& result);
 
 	virtual const bool GetHit() const { return nullptr; }
+	
+	virtual const int GetNumber() const { return NULL; }
 
 protected:
 	KdModelWork m_modelWork;
@@ -109,7 +112,7 @@ protected:
 	Math::Vector3 m_Cpos = m_mWorld.Translation();
 	bool m_change = false;
 
-	bool    m_isAlive = true;
+	bool m_isAlive = true;
 	bool m_hit = false;
 
 	// このキャラクターの球情報

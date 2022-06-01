@@ -147,7 +147,6 @@
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\Application.h" />
-    <ClInclude Include="Src\Application\Game\Camera\FPSCamera.h" />
     <ClInclude Include="Src\Application\Game\Camera\TPSCamera.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Arrow.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Effect2D.h" />
@@ -159,7 +158,10 @@
     <ClInclude Include="Src\Application\Game\GameObject\Player.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\ClearObject\ClearObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\ResultObject\ResultObject.h" />
+    <ClInclude Include="Src\Application\Game\GameObject\Scene\SceneObject.h" />
+    <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\Signboard.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleObject.h" />
+    <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleStageMap.h" />
     <ClInclude Include="Src\Application\Game\GameObject\StageMap.h" />
     <ClInclude Include="Src\Application\Game\GameObject\StageObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\StageObjectFix.h" />
@@ -191,7 +193,6 @@
     <ClInclude Include="src\System\Window\KdWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Application\Game\Camera\FPSCamera.cpp" />
     <ClCompile Include="Src\Application\Game\Camera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Arrow.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Effect2D.cpp" />
@@ -203,7 +204,10 @@
     <ClCompile Include="Src\Application\Game\GameObject\Player.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\ClearObject\ClearObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\ResultObject\ResultObject.cpp" />
+    <ClCompile Include="Src\Application\Game\GameObject\Scene\SceneObject.cpp" />
+    <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\Signboard.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleObject.cpp" />
+    <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleStageMap.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\StageMap.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\StageObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\StageObjectFix.cpp" />

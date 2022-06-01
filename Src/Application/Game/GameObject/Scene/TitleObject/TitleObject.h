@@ -1,21 +1,17 @@
 ﻿#pragma once
 
-#include "../../GameObject.h"
+#include "../SceneObject.h"
 
-class TitleObject : public GameObject
+class TitleObject : public SceneObject
 {
 public:
 	TitleObject();
 	~TitleObject();
 
 	void Init() override;
-	void Draw2D() override;
-	void Update() override;
-
 
 
 private:
 	void Release();
 
-	std::shared_ptr<KdTexture> m_spTitleTex;
 };

@@ -15,10 +15,6 @@ public:
 	void Change3D() override;
 	void DrawTranslucent() override;
 
-	// 場所の設定
-	//void SetWorldMatrix(float x, float z, float y = 0.0f) { m_mWorld = Math::Matrix::CreateTranslation(x, y, z); }
-	//void SetModel(const std::shared_ptr<KdModelData> spModel);
-
 	const GameObject::ClassID GetClassID() const override
 	{
 		return GameObject::eLift;
@@ -26,6 +22,7 @@ public:
 
 	bool CheckCollisionBump(const SphereInfo& info, BumpResult& result, float dis = 0) override;
 
+	// 始点、終点の設定
 	void SetRoute(const Math::Vector3& start, const Math::Vector3& end);
 
 	void SetSpeed(float speed) { m_speed = speed; }

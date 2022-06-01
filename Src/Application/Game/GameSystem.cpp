@@ -2,7 +2,6 @@
 #include "../main.h"
 #include "GameObject/StageMap.h"
 #include "GameObject/Player.h"
-#include "Camera/FPSCamera.h"
 #include "Camera/TPSCamera.h"
 #include "GameObject/Effect2D.h"
 #include "GameObject/Enemy.h"
@@ -18,10 +17,28 @@ void GameSystem::TitleInit()
 {
 	Release();
 
+	// モデル読み込み
+	m_sky.SetModel(m_resourceFactory.GetModelData("Data/Models/SkySphere/SkySphere.gltf"));
+
+	// 空を拡大させる
+	m_skyMat = m_skyMat.CreateScale(200.0f);
+
 	// タイトルオブジェクトのインスタンス化
 	std::shared_ptr<TitleObject> spTitle = std::make_shared<TitleObject>();
 	spTitle->Init();
 	AddObject(spTitle);
+
+	// プレイヤーオブジェクトのインスタンス化
+	std::shared_ptr<Player> spPlayer = std::make_shared<Player>();
+	spPlayer->Init();
+	spPlayer->Change2D();
+	AddObject(spPlayer);
+
+	// ポリゴンを作成
+	std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+	spEffect->Init();
+	spEffect->SetAnimation(5, 5);
+	AddObject(spEffect);
 }
 
 void GameSystem::GameInit()
@@ -55,7 +72,7 @@ void GameSystem::GameInit()
 
 void GameSystem::ResultInit()
 {
-	Release();
+	m_audioManager.StopAllSound();
 
 	// リザルトオブジェクトのインスタンス化
 	std::shared_ptr<ResultObject> spResult = std::make_shared<ResultObject>();
@@ -63,15 +80,11 @@ void GameSystem::ResultInit()
 	AddObject(spResult);
 
 	m_change = false;
-	for (std::shared_ptr<GameObject>& spObject : m_spObjects)
-	{
-		spObject->Change2D();
-	}
 }
 
 void GameSystem::ClearInit()
 {
-	Release();
+	m_audioManager.StopAllSound();
 
 	// リザルトオブジェクトのインスタンス化
 	std::shared_ptr<ClearObject> spClear = std::make_shared<ClearObject>();
@@ -79,10 +92,6 @@ void GameSystem::ClearInit()
 	AddObject(spClear);
 
 	m_change = false;
-	for (std::shared_ptr<GameObject>& spObject : m_spObjects)
-	{
-		spObject->Change2D();
-	}
 }
 
 void GameSystem::Init()
@@ -96,18 +105,12 @@ void GameSystem::Update()
 {
 	m_input.Update();
 	
-	if (m_nextSceneName == "Title")
-	{
-		if (GameSystem::GetInstance().GetInputController().GetKeyState("ChangeScene") & eKeyPress)
-		{
-			GameSystem::GetInstance().RequestChangeScene("Game");
-		}
-	}
+	// シーン変更
 	if (m_nextSceneName == "Result")
 	{
 		if (GameSystem::GetInstance().GetInputController().GetKeyState("ChangeScene") & eKeyPress)
 		{
-			GameSystem::GetInstance().RequestChangeScene("Title");
+			GameSystem::GetInstance().RequestChangeScene("Game");
 		}
 	}
 	if (m_nextSceneName == "Clear")
@@ -127,40 +130,45 @@ void GameSystem::Update()
 	}
 
 
-	if (m_nextSceneName == "Game")
+	if (m_nextSceneName == "Title" || m_nextSceneName == "Game")
 	{
 		if (GameSystem::GetInstance().GetInputController().GetKeyState("ChangeWorld") & eKeyPress)
 		{
-			std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
-			spSoundInstance = m_audioManager.Play("Data/Sounds/button43.wav");
-			spSoundInstance->SetVolume(0.15f);
-
-			m_change = !m_change;
-			if (m_change)
+			if (m_canChange)
 			{
-				for (std::shared_ptr<GameObject>& spObject : m_spObjects)
-				{
-					spObject->Change3D();
-				}
+				std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
+				spSoundInstance = m_audioManager.Play("Data/Sounds/beep25.wav");
+				spSoundInstance->SetVolume(0.1f);
 			}
-			if (!m_change)
+			if (!m_canChange)
 			{
-				for (std::shared_ptr<GameObject>& spObject : m_spObjects)
+				std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
+				spSoundInstance = m_audioManager.Play("Data/Sounds/button43.wav");
+				spSoundInstance->SetVolume(0.15f);
+
+				m_change = !m_change;
+				if (m_change)
 				{
-					spObject->Change2D();
+					for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
+					{
+						spObject->Change3D();
+					}
+				}
+				if (!m_change)
+				{
+					std::shared_ptr<Player> spPlayer = std::make_shared<Player>();
+					spPlayer->Change2D();
+
+					if (m_startChange)
+					{
+						for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
+						{
+							spObject->Change2D();
+						}
+					}
 				}
 			}
 		}
-	}
-
-	if (m_limit)
-	{
-		for (std::shared_ptr<GameObject>& spObject : m_spObjects)
-		{
-			spObject->Change2D();
-		}
-		m_change = false;
-		m_limit = false;
 	}
 
 	if (m_isRequestChangeScene)
@@ -169,23 +177,28 @@ void GameSystem::Update()
 		return;
 	}
 
+	// シーンオブジェクトの更新
+	for (std::shared_ptr<SceneObject>& spObject : m_spSceneObjects)
+	{
+		spObject->Update();
+	}
 	// ゲームオブジェクトの更新
-	for (std::shared_ptr<GameObject>& spObject : m_spObjects)
+	for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 	{
 		spObject->Update();
 	}
 
 	// 死んだオブジェクト除外する
-	std::list<std::shared_ptr<GameObject>>::iterator objItr = m_spObjects.begin();
+	std::list<std::shared_ptr<GameObject>>::iterator objItr = m_spGameObjects.begin();
 
-	while (objItr != m_spObjects.end())
+	while (objItr != m_spGameObjects.end())
 	{
 		if (!(*objItr)->IsAlive())
 		{
 			// スマートポインタは解放は自動で行われる
 			objItr->reset();
 
-			objItr = m_spObjects.erase(objItr);
+			objItr = m_spGameObjects.erase(objItr);
 
 			continue;
 		}
@@ -216,7 +229,7 @@ void GameSystem::Draw()
 	SHADER->m_standardShader.SetToDevice();
 
 	// ゲームオブジェクトの描画
-	for (std::shared_ptr<GameObject>& spObject : m_spObjects)
+	for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 	{
 		spObject->Draw();
 	}
@@ -231,7 +244,7 @@ void GameSystem::Draw()
 		D3D.WorkDevContext()->RSSetState(SHADER->m_rs_CullNone);
 
 		// ゲームオブジェクト(透明物)の描画
-		for (std::shared_ptr<GameObject>& spObject : m_spObjects)
+		for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 		{
 			spObject->DrawEffect();
 		}
@@ -245,7 +258,7 @@ void GameSystem::Draw()
 	SHADER->m_translucentShader.SetToDevice();
 
 	// ゲームオブジェクトの描画
-	for (std::shared_ptr<GameObject>& spObject : m_spObjects)
+	for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 	{
 		spObject->DrawTranslucent();
 	}
@@ -254,7 +267,11 @@ void GameSystem::Draw()
 	SHADER->m_spriteShader.Begin();
 	{
 		// 2D系描画はこの範囲で行う
-		for (std::shared_ptr<GameObject>& spObject : m_spObjects)
+		for (std::shared_ptr<SceneObject>& spObject : m_spSceneObjects)
+		{
+			spObject->Draw2D();
+		}
+		for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 		{
 			spObject->Draw2D();
 		}
@@ -294,7 +311,6 @@ void GameSystem::ChangeScene()
 
 const std::shared_ptr<KdCamera> GameSystem::GetCamera() const
 {
-	// デバッグカメラを組み込んでいない場合
 	return m_spCamera;
 }
 
@@ -302,10 +318,13 @@ void GameSystem::Release()
 {
 	m_audioManager.StopAllSound();
 
-	// ゲームオブジェクトの解放
-	//for (GameObject* pObject : m_pObjects)
-	//{
-	//	KdSafeDelete(pObject);
-	//}
-	m_spObjects.clear();
+	m_spSceneObjects.clear();
+	m_spGameObjects.clear();
+
+	for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
+	{
+		spObject->Change2D();
+	}
+
+	m_change = false;
 }

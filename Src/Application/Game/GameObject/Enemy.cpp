@@ -7,8 +7,6 @@ void Enemy::Init()
 
 	m_bumpSphereInfo.m_radius = 0.3f;
 	m_bumpSphereInfo.m_pos.y = 0.7f;
-
-	//m_worldRot.y = 180;
 }
 
 void Enemy::Update()
@@ -83,28 +81,6 @@ void Enemy::UpdateWorldMatrix()
 	m_mWorld = rotation * trans;
 }
 
-
-//void Enemy::UpdateCollision()
-//{
-//	for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
-//	{
-//		if (spObject->GetClassID() != GameObject::eStage) {
-//			continue;
-//		}
-//
-//		SphereInfo sphereInfo(GetPos() + m_bumpSphereInfo.m_pos, m_bumpSphereInfo.m_radius);
-//		BumpResult bumpResult;
-//
-//		// 自分と当たる対象に呼び出してもらう
-//		bool result = spObject->CheckCollisionBump(sphereInfo, bumpResult);
-//		if (result)
-//		{
-//			// 押し戻す処理
-//			//m_worldPos += bumpResult.m_pushVec;
-//		}
-//	}
-//}
-
 void Enemy::ShotArrow()
 {
 	m_lifeSpan--;
@@ -131,6 +107,8 @@ void Enemy::ShotArrow()
 		{
 			spArrow->SetWorldMatrix(pNode->m_worldTransform * m_mWorld);
 		}
+
+		spArrow->SetPosX(m_Cpos.x);
 
 		if (!m_change)
 		{

@@ -67,9 +67,6 @@ void Lift::Change2D()
 	Math::Matrix scale = Math::Matrix::CreateScale(100.0f, 1.0f, 1.0f);
 	m_mWorld *= scale;
 
-	//m_startPos = Math::Vector3(0.0f, m_startPos.y, m_startPos.z);
-	//m_endPos = Math::Vector3(0.0f, m_endPos.y, m_endPos.z);
-
 	m_startPos = Math::Vector3(m_startKeepPos.x, m_startPos.y, m_startPos.z);
 	m_endPos = Math::Vector3(m_endKeepPos.x, m_endPos.y, m_endPos.z);
 

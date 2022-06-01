@@ -11,8 +11,8 @@ public:
 	void Init() override;
 	void Update() override;
 	void Draw() override;
-	void Change3D() override;
-	void Change2D() override;
+	void Change3D() override {};
+	void Change2D() override {};
 	void DrawTranslucent() override;
 
 	const GameObject::ClassID GetClassID() const override

@@ -1,21 +1,18 @@
 ﻿#pragma once
 
-#include "../../GameObject.h"
+#include "../SceneObject.h"
 
-class ResultObject : public GameObject
+class ResultObject : public SceneObject
 {
 public:
 	ResultObject();
 	~ResultObject();
 
 	void Init() override;
-	void Draw2D() override;
-	void Update() override;
 
 
 
 private:
 	void Release();
 
-	std::shared_ptr<KdTexture> m_spResultTex;
 };

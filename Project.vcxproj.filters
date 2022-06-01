@@ -159,9 +159,6 @@
     <ClInclude Include="Src\Application\Game\GameObject\Player.h">
       <Filter>Src\Application\Game\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Game\Camera\FPSCamera.h">
-      <Filter>Src\Application\Game\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Game\Camera\TPSCamera.h">
       <Filter>Src\Application\Game\Camera</Filter>
     </ClInclude>
@@ -215,6 +212,15 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Game\GameObject\Arrow.h">
       <Filter>Src\Application\Game\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleStageMap.h">
+      <Filter>Src\Application\Game\GameObject\Scene\TitleObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\Signboard.h">
+      <Filter>Src\Application\Game\GameObject\Scene\TitleObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Game\GameObject\Scene\SceneObject.h">
+      <Filter>Src\Application\Game\GameObject\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -287,9 +293,6 @@
     <ClCompile Include="Src\Application\Game\GameObject\Player.cpp">
       <Filter>Src\Application\Game\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Game\Camera\FPSCamera.cpp">
-      <Filter>Src\Application\Game\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Game\Camera\TPSCamera.cpp">
       <Filter>Src\Application\Game\Camera</Filter>
     </ClCompile>
@@ -340,6 +343,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Game\GameObject\Arrow.cpp">
       <Filter>Src\Application\Game\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleStageMap.cpp">
+      <Filter>Src\Application\Game\GameObject\Scene\TitleObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\Signboard.cpp">
+      <Filter>Src\Application\Game\GameObject\Scene\TitleObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\GameObject\Scene\SceneObject.cpp">
+      <Filter>Src\Application\Game\GameObject\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

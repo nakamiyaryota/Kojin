@@ -6,11 +6,12 @@ class Effect2D;
 class StageMap : public GameObject
 {
 public:
-	StageMap();
-	~StageMap();
+	StageMap() {}
+	~StageMap() {}
 
 	void Init() override;
-	void Update() override;
+	void FirstStageInit();
+	void SecondStageInit();
 	void Draw() override;
 	void DrawTranslucent() override;
 
@@ -27,9 +28,8 @@ private:
 	void Release();
 
 	const int ENEMY_SIZE = 3;
-	const int OBJECT_SIZE = 17;
+	const int OBJECT_SIZE = 20;
 	const int OBJECTFIX_SIZE = 1;
 	const int LIFT_SIZE = 4;
 	const int LIFTFIX_SIZE = 0;
-	const int EFFECT_SIZE = 0;
 };

@@ -1,8 +1,7 @@
 ﻿#pragma once
 
+class SceneObject;
 class GameObject;
-
-class DebugCamera;
 
 class GameSystem
 {
@@ -18,18 +17,31 @@ public:
 
 	void RequestChangeScene(const std::string& name);
 
-	void RequestChange(bool flg) { m_limit = flg; }
+	void RequestChangeFlg(bool flg) { m_canChange = flg; }
+
+	void RequestStartFlg(bool flg) { m_startChange = flg; }
+
+	void SetStageNumber(int number) { m_stageNumber = number; }
 
 	// オブジェクトの追加
 	void AddObject(std::shared_ptr<GameObject> spObject)
 	{
-		if (spObject) { m_spObjects.push_back(spObject); }
+		if (spObject) { m_spGameObjects.push_back(spObject); }
+	}
+	void AddObject(std::shared_ptr<SceneObject> spObject)
+	{
+		if (spObject) { m_spSceneObjects.push_back(spObject); }
 	}
 
 	// ゲームオブジェクトのリストを毎取得する
 	const std::list<std::shared_ptr<GameObject>>& GetObjects() 
 	{ 
-		return m_spObjects; 
+		return m_spGameObjects; 
+	}
+	// シーンオブジェクトのリストを毎取得する
+	const std::list<std::shared_ptr<SceneObject>>& GetSceneObjects()
+	{
+		return m_spSceneObjects;
 	}
 
 	void SetCamera(std::shared_ptr<KdCamera> spCamera) { m_spCamera = spCamera; }
@@ -43,10 +55,12 @@ public:
 
 	const InputController& GetInputController() { return m_input; }
 
+	const std::string GetSceneName() const { return m_nextSceneName; }
+
+	const int GetStageNumber() const { return m_stageNumber; }
+
 	// キャラクターにかかる重力
 	static const float s_worldGravity;
-	// static：インスタンスが複製されてもメモリを共有する変数
-	// const：初期化以外の代入を禁止された変数
 
 private:
 	void Release();
@@ -58,10 +72,9 @@ private:
 
 	std::shared_ptr<KdCamera>   m_spCamera = nullptr; // カメラ
 
-	std::shared_ptr<DebugCamera> m_spDebugCamera = nullptr;
-
 	// ゲームオブジェクトリスト
-	std::list<std::shared_ptr<GameObject>>  m_spObjects;
+	std::list<std::shared_ptr<GameObject>>  m_spGameObjects;
+	std::list<std::shared_ptr<SceneObject>>  m_spSceneObjects;
 
 	// リソース管理クラス
 	ResourceFactory m_resourceFactory;
@@ -75,8 +88,11 @@ private:
 	std::string m_nextSceneName = "Title";
 	bool m_isRequestChangeScene = false;
 
+	int m_stageNumber;
+
 	bool m_change = false;
-	bool m_limit = false;
+	bool m_canChange = false;
+	bool m_startChange = true;
 
 // シングルトン
 private:
@@ -95,13 +111,3 @@ public:
 		return instance;
 	}
 };
-
-// GameSystemを呼び出すマクロ
-//#define GameInstance GameSystem::GetInstance()
-
-// マクロで呼び出す
-//#define GameResourceFactory GameSystem::GetInstance().WorkResourceFactory()
-
-//#define GameAudioManager GameSystem::GetInstance().WorkAudioManager()
-
-//#define GameInput GameInstance.GetInputController()

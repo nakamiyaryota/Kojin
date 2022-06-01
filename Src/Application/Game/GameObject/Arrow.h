@@ -18,6 +18,9 @@ public:
 	// Œü‚«‚ÆêŠ‚Ìİ’è
 	void SetWorldMatrix(const Math::Matrix& world) { m_mWorld = world; }
 
+	// XÀ•W‚Ì‚İİ’è
+	void SetPosX(const float& x) { SetPos(Math::Vector3(x, m_mWorld._42, m_mWorld._43)); }
+
 	const GameObject::ClassID GetClassID() const override
 	{
 		return GameObject::eArrow;
@@ -37,6 +40,4 @@ private:
 	bool m_isHit = false;
 
 	Math::Vector3 m_prevPos = {}; // “®‚­‘O‚ÌˆÊ’u
-
-	KdTrailPolygon m_trail;
 };

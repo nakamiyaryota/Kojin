@@ -12,8 +12,8 @@ public:
 	void Update() override;
 	void Draw() override {}
 	void DrawEffect() override;
-	void Change2D() override {}
-	void Change3D() override {}
+	void Change2D() override { m_change = false; }
+	void Change3D() override { m_change = true; }
 
 	// テクスチャ設定
 	void SetTexture(const std::shared_ptr<KdTexture> spTex, float angleZ = 0.0f, float w = 1.0f, float h = 1.0f, Math::Color col = kWhiteColor);
@@ -23,7 +23,11 @@ public:
 	void SetLifeSpan(int lifeSpan) { m_lifeSpan = lifeSpan; }
 	const KdSquarePolygon GetPolyData() const { return m_poly; }
 
+	void SetChangeDir(bool flg = false) { m_changeDir = flg; }
+
 private:
+	void UpdateCollision();
+
 	// 四角ポリゴン
 	KdSquarePolygon m_poly;
 
@@ -32,6 +36,8 @@ private:
 
 	// ループするかどうか
 	bool m_isLoop = false;
+
+	bool m_changeDir = false;
 
 	int m_lifeSpan = -1;
 

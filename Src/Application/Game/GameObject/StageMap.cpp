@@ -7,28 +7,96 @@
 #include "Goal.h"
 #include "Effect2D.h"
 
-StageMap::StageMap()
-{
-}
-
-StageMap::~StageMap()
-{
-}
-
 void StageMap::Init()
 {
+	if (!GameSystem::GetInstance().GetStageNumber()) { return; }
 
+	if (GameSystem::GetInstance().GetStageNumber() == 1)
+	{
+		FirstStageInit();
+	}
+
+	if (GameSystem::GetInstance().GetStageNumber() == 2)
+	{
+		SecondStageInit();
+	}
+
+	std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
+	spSoundInstance = GameSystem::GetInstance().WorkAudioManager().Play("Data/Sounds/NES-RPG-B01-1(Title).wav", true);
+	spSoundInstance->SetVolume(0.5f);
+}
+
+void StageMap::FirstStageInit()
+{
+	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageMap/StageMap2.gltf"));
+
+	std::shared_ptr<Goal> spGoal = std::make_shared<Goal>();
+	spGoal->Init();
+	spGoal->SetWorldMatrix(0.0f, 30.0f, 0.0f);
+	spGoal->Change2D();
+	GameSystem::GetInstance().AddObject(spGoal);
+
+	// 2Dオブジェクトのインスタンス化
+	for (int i = 0; i < 7; i++)
+	{
+		// 山描画
+		{
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(-6.0f, 0.0f, (10.0f * i) - 1.5f));
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Mountain.png"), 0.0f, 8.0f, 16.0f);
+
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
+
+		// 木描画
+		{
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(-6.0f, 2.3f, 10.0f * i));
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Tree.png"), 0.0f, 4.0f, 5.0f);
+
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
+
+		// 草描画
+		{
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(-6.0f, 0.5f, (10.0f * i) - 2.0f));
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Green.png"), 0.0f, 2.0f, 4.0f);
+
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
+
+	}
+
+	for (int i = 0; i < 21; i++)
+	{
+		std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+		spEffect->Init();
+		spEffect->SetPos(Math::Vector3(float((rand() % 11) - 5), 0.11f, (3.3f * i) - 2.5f));
+		spEffect->SetChangeDir(true);
+		spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Weed.png"), 0.0f, 1.0f, 0.5f);
+
+		GameSystem::GetInstance().AddObject(spEffect);
+	}
+}
+
+void StageMap::SecondStageInit()
+{
 	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageMap/StageMap3.gltf"));
 
 	std::shared_ptr<Goal> spGoal = std::make_shared<Goal>();
 	spGoal->Init();
-	spGoal->SetWorldMatrix(0.0f, 75.0f, 11.5f);
+	spGoal->SetWorldMatrix(0.0f, 72.0f, 11.5f);
 	spGoal->Change2D();
 	GameSystem::GetInstance().AddObject(spGoal);
 
 	// 敵をインスタンス化
 	for (int i = 0; i < ENEMY_SIZE; i++)
-	{ 
+	{
 		std::shared_ptr<Enemy> spEnemy = std::make_shared<Enemy>();
 		spEnemy->Init();
 
@@ -44,7 +112,7 @@ void StageMap::Init()
 		{
 			spEnemy->SetWorldMatrix(-3.0f, 70.0f);
 		}
-		
+
 
 		spEnemy->Change3D();
 		spEnemy->Change2D();
@@ -53,7 +121,7 @@ void StageMap::Init()
 
 	// ステージオブジェクトをインスタンス化
 	for (int i = 0; i < OBJECT_SIZE; i++)
-	{ 
+	{
 		std::shared_ptr<StageObject> spStageObject = std::make_shared<StageObject>();
 		spStageObject->Init();
 
@@ -64,12 +132,12 @@ void StageMap::Init()
 		}
 		if (i == 1)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject1.gltf"));
+			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject5.gltf"));
 			spStageObject->SetWorldMatrix(-5.0f, 21.0f);
 		}
 		if (i == 2)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject1.gltf"));
+			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject5.gltf"));
 			spStageObject->SetWorldMatrix(5.0f, 23.0f);
 		}
 		if (i == 3)
@@ -142,7 +210,22 @@ void StageMap::Init()
 			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 58.0f, 0.0f);
 		}
-		
+		if (i == 17)
+		{
+			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
+			spStageObject->SetWorldMatrix(-2.5f, 69.5f, 11.5f);
+		}
+		if (i == 18)
+		{
+			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
+			spStageObject->SetWorldMatrix(2.5f, 74.5f, 11.5f);
+		}
+		if (i == 19)
+		{
+			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject2.gltf"));
+			spStageObject->SetWorldMatrix(2.5f, 72.0f, 16.0f);
+		}
+
 		spStageObject->Change2D();
 		GameSystem::GetInstance().AddObject(spStageObject);
 	}
@@ -198,42 +281,57 @@ void StageMap::Init()
 		std::shared_ptr<LiftFix> spLiftFix = std::make_shared<LiftFix>();
 		spLiftFix->Init();
 
-		if (i == 0)
-		{
-			spLiftFix->SetRoute(Math::Vector3(-5.0f, 0.5f, 67.0f), Math::Vector3(-5.0f, 21.0f, 67.0f));
-		}
-
 		GameSystem::GetInstance().AddObject(spLiftFix);
 	}
 
 	// 2Dオブジェクトのインスタンス化
 	for (int i = 0; i < 10; i++)
 	{
-		std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+		// 山描画
+		{
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(-6.0f, 0.0f, (10.0f * i) - 1.5f));
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Mountain.png"), 0.0f, 8.0f, 16.0f);
 
-		spEffect->Init();
-		spEffect->SetPos(Math::Vector3(-6.0f, 2.3f, 10.0f * i));
-		spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Tree.png"), 0.0f, 4.0f, 5.0f);
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
 
-		GameSystem::GetInstance().AddObject(spEffect);
+		// 木描画
+		{
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(-6.0f, 2.3f, 10.0f * i));
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Tree.png"), 0.0f, 4.0f, 5.0f);
+
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
+
+		// 草描画
+		{
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(-6.0f, 0.5f, (10.0f * i) - 2.0f));
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Green.png"), 0.0f, 2.0f, 4.0f);
+
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
+
 	}
 
-	for (int i = 0; i < EFFECT_SIZE; i++)
+	for (int i = 0; i < 30; i++)
 	{
-		std::shared_ptr<Effect2D> spHideEffect = std::make_shared<Effect2D>();
-		spHideEffect->Init();
+		if (i != 7 && i != 8) {
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+			spEffect->Init();
+			spEffect->SetPos(Math::Vector3(float((rand() % 11) - 5), 0.11f, (3.3f * i) - 2.5f));
+			spEffect->SetChangeDir(true);
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Weed.png"), 0.0f, 1.0f, 0.5f);
 
-		GameSystem::GetInstance().AddObject(spHideEffect);
+			GameSystem::GetInstance().AddObject(spEffect);
+		}
 	}
-
-	std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
-	spSoundInstance = GameSystem::GetInstance().WorkAudioManager().Play("Data/Sounds/NES-RPG-B07-2(Field1-Loop140).wav", true);
-	spSoundInstance->SetVolume(0.5f);
-}
-
-void StageMap::Update()
-{
-	
 }
 
 void StageMap::Draw()

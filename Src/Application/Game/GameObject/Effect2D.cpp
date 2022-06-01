@@ -2,13 +2,11 @@
 
 void Effect2D::Init()
 {
-	// ポリゴンを作成
-	//m_poly.SetTexture(GameResourceFactory.GetTexture("Data/Textures/Explosion.png"));
-	//m_poly.Init(1.0f, 1.0f, kWhiteColor);
 }
 
 void Effect2D::Update()
 {
+	UpdateCollision();
 
 	// アニメーションが無い or ループアニメーション
 	if (m_poly.GetAnimationSize() <= 1 || m_isLoop)
@@ -40,21 +38,33 @@ void Effect2D::DrawEffect()
 	scale.y = m_mWorld.Up().Length();
 	scale.z = m_mWorld.Forward().Length();
 
-	//mDraw = Math::Matrix::CreateScale(scale);
-
 	// 回転
-	std::shared_ptr<KdCamera> gameCam = GameSystem::GetInstance().GetCamera();
-	mDraw = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(90.0f));
+	//std::shared_ptr<KdCamera> gameCam = GameSystem::GetInstance().GetCamera();
 
-	if (gameCam)
+	if (m_changeDir)
 	{
-		// カメラの逆行列の合成
-		Math::Matrix mCamInv = gameCam->GetCameraMatrix();
-		mCamInv.Invert();
-
-		// カメラの目の前に持ってくる
-		//mDraw *= mCamInv;
+		float dir;
+		if (m_change)
+		{
+			dir = 0.0f;
+		}
+		if (!m_change)
+		{
+			dir = 90.0f;
+		}
+		mDraw = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(dir));
 	}
+	if (!m_changeDir)
+	{
+		mDraw = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(90.0f));
+	}
+
+	//if (gameCam)
+	//{
+	//	// カメラの逆行列の合成
+	//	Math::Matrix mCamInv = gameCam->GetCameraMatrix();
+	//	mCamInv.Invert();
+	//}
 
 	// 移動
 	mDraw.Translation(m_mWorld.Translation());
@@ -80,4 +90,31 @@ void Effect2D::SetAnimation(int splitX, int splitY, float speed, bool isLoop)
 	// アニメーションの設定
 	m_animSpd = speed;
 	m_isLoop = isLoop;
+}
+
+void Effect2D::UpdateCollision()
+{
+	if (m_changeDir)
+	{
+		for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
+		{
+			if (spObject->GetClassID() != GameObject::eStage &&
+				spObject->GetClassID() != GameObject::eStageObject &&
+				spObject->GetClassID() != GameObject::eStageObjectFix) {
+				continue;
+			}
+
+			Math::Vector3 rayPos = m_mWorld.Translation();
+			rayPos.y += 0.5f;
+
+			RayInfo rayInfo(rayPos, Math::Vector3(0.0f, -1.0f, 0.0f), 1.0f);
+
+			BumpResult bumpResult;
+
+			if (!spObject->CheckCollisionBump(rayInfo, bumpResult))
+			{
+				//m_isAlive = false;
+			}
+		}
+	}
 }

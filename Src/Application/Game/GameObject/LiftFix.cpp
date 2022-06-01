@@ -37,17 +37,6 @@ void LiftFix::Draw()
 	}
 }
 
-void LiftFix::Change3D()
-{
-	//Math::Matrix scale = Math::Matrix::CreateScale(0.1f, 1.0f, 1.0f);
-	//m_mWorld *= scale;
-}
-
-void LiftFix::Change2D()
-{
-	//Math::Matrix scale = Math::Matrix::CreateScale(10.0f, 1.0f, 1.0f);
-	//m_mWorld *= scale;
-}
 void LiftFix::DrawTranslucent()
 {
 	if (m_hit)

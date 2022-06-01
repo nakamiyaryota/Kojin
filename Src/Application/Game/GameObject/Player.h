@@ -17,17 +17,8 @@ public:
 	void Draw() override;
 	void DrawTranslucent() override;
 	void Draw2D() override;
-	void DrawEffect() override;
-	void Change3D() override 
-	{
-		m_worldPos.x = m_Cpos.x;
-		m_change = true;
-	}
-	void Change2D() override 
-	{
-		m_Cpos = m_mWorld.Translation();
-		m_change = false; 
-	}
+	void Change3D() override;
+	void Change2D() override;
 
 	// 場所の取得
 	const Math::Vector3 GetPos() const override { return m_worldPos; }
@@ -72,9 +63,9 @@ private:
 	void Update3D();
 
 	bool m_isAlive = true;
-	bool m_limit = false;
 	bool m_canJump = true;
 	bool m_enemyHit = false;
+	bool m_objectHit = false;
 
 	Math::Vector3 m_worldPos;
 	Math::Vector3 m_worldRot;
@@ -86,7 +77,7 @@ private:
 
 	const float MIN_TIME = 0;     // 3Dモード時の時間制限最小値
 
-	float m_changeTime = MAX_TIME;
+	float m_changeTime = MAX_TIME; // 3Dモード時の制限時間
 
 	int m_life = 3; // プレイヤーのHP
 	int m_invincibleTime = 120; // ダメージを喰らった時の無敵時間
@@ -97,8 +88,5 @@ private:
 
 	bool m_isLanding = false; // 着地している状態
 
-	std::shared_ptr<Effect2D> m_SpShadow = nullptr; // 丸影用テクスチャ
-	Math::Vector3 m_ShadowPos;
-	float m_ShadowDistance = 0.0f; // レイがHITした際の本体との距離
-
+	float cameraRotY = -90.0f;
 };

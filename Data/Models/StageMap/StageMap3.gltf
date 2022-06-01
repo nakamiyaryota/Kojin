@@ -143,10 +143,10 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 8342,
+            "count" : 8390,
             "max" : [
                 0.5,
-                0.5,
+                0.375,
                 0.5
             ],
             "min" : [
@@ -159,25 +159,25 @@
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 8342,
+            "count" : 8390,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 8342,
+            "count" : 8390,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 15996,
+            "count" : 16068,
             "type" : "SCALAR"
         },
         {
             "bufferView" : 4,
             "componentType" : 5126,
-            "count" : 5180,
+            "count" : 5188,
             "max" : [
                 0.5,
                 0.5,
@@ -193,67 +193,67 @@
         {
             "bufferView" : 5,
             "componentType" : 5126,
-            "count" : 5180,
+            "count" : 5188,
             "type" : "VEC3"
         },
         {
             "bufferView" : 6,
             "componentType" : 5126,
-            "count" : 5180,
+            "count" : 5188,
             "type" : "VEC2"
         },
         {
             "bufferView" : 7,
             "componentType" : 5123,
-            "count" : 8208,
+            "count" : 8220,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 100104,
+            "byteLength" : 100680,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 100104,
-            "byteOffset" : 100104
+            "byteLength" : 100680,
+            "byteOffset" : 100680
         },
         {
             "buffer" : 0,
-            "byteLength" : 66736,
-            "byteOffset" : 200208
+            "byteLength" : 67120,
+            "byteOffset" : 201360
         },
         {
             "buffer" : 0,
-            "byteLength" : 31992,
-            "byteOffset" : 266944
+            "byteLength" : 32136,
+            "byteOffset" : 268480
         },
         {
             "buffer" : 0,
-            "byteLength" : 62160,
-            "byteOffset" : 298936
+            "byteLength" : 62256,
+            "byteOffset" : 300616
         },
         {
             "buffer" : 0,
-            "byteLength" : 62160,
-            "byteOffset" : 361096
+            "byteLength" : 62256,
+            "byteOffset" : 362872
         },
         {
             "buffer" : 0,
-            "byteLength" : 41440,
-            "byteOffset" : 423256
+            "byteLength" : 41504,
+            "byteOffset" : 425128
         },
         {
             "buffer" : 0,
-            "byteLength" : 16416,
-            "byteOffset" : 464696
+            "byteLength" : 16440,
+            "byteOffset" : 466632
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 481112,
+            "byteLength" : 483072,
             "uri" : "StageMap3.bin"
         }
     ]

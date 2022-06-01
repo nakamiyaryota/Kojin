@@ -11,26 +11,12 @@ ResultObject::~ResultObject()
 void ResultObject::Init()
 {
 	// テクスチャの読み込み
-	m_spResultTex = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Result/Result.png");
-}
+	m_spTex[0] = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Result/ResultMain.png");
+	m_spTex[1] = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Result/Result.png");
 
-void ResultObject::Draw2D()
-{
-	if (!m_spResultTex) { return; }
-
-	// ビューポートを利用して解像度を得る
-	Math::Viewport vp;
-	D3D.GetViewport(vp);
-
-	int posX = int(-(vp.width * 0.5f) + (m_spResultTex.get()->GetWidth() * 0.5f));
-	int posY = int((vp.height * 0.5f) - (m_spResultTex.get()->GetHeight() * 0.5f));
-
-	SHADER->m_spriteShader.SetMatrix(Math::Matrix::Identity);
-	SHADER->m_spriteShader.DrawTex(m_spResultTex.get(), posX, posY);
-}
-
-void ResultObject::Update()
-{
+	std::shared_ptr<KdSoundInstance> spSoundInstance = nullptr;
+	spSoundInstance = GameSystem::GetInstance().WorkAudioManager().Play("Data/Sounds/NES-RPG-A03-2(Town2-Loop100).wav", true);
+	spSoundInstance->SetVolume(0.5f);
 	
 }
 
