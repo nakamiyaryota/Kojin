@@ -156,15 +156,9 @@ void GameSystem::Update()
 				}
 				if (!m_change)
 				{
-					std::shared_ptr<Player> spPlayer = std::make_shared<Player>();
-					spPlayer->Change2D();
-
-					if (m_startChange)
+					for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 					{
-						for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
-						{
-							spObject->Change2D();
-						}
+						spObject->Change2D();
 					}
 				}
 			}

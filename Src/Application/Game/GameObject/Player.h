@@ -82,11 +82,11 @@ private:
 	int m_life = 3; // プレイヤーのHP
 	int m_invincibleTime = 120; // ダメージを喰らった時の無敵時間
 
-	std::shared_ptr<KdTexture> m_spLifeTex = nullptr;     // HP用テクスチャ
-	std::shared_ptr<KdTexture> m_spLifeBackTex = nullptr; // HP背景用テクスチャ
+	std::shared_ptr<KdTexture> m_spLifeTex[3];     // HP用テクスチャ
 	std::shared_ptr<KdTexture> m_spLimitTex = nullptr;    // 3Dゲージ用テクスチャ
 
 	bool m_isLanding = false; // 着地している状態
 
-	float cameraRotY = -90.0f;
+	float m_cameraRotY = -90.0f;
+	bool m_start = true;
 };

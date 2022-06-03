@@ -18,8 +18,9 @@ void Player::Init()
 	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/Player/Player.gltf"));
 
 	// テクスチャの読み込み
-	m_spLifeTex = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Life.png");
-	m_spLifeBackTex = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/LifeBack.png");
+	m_spLifeTex[0] = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/LifeBack.png");
+	m_spLifeTex[1] = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Life.png");
+	m_spLifeTex[2] = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/LifeFrame.png");
 	m_spLimitTex = GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Limit.png");
 	
 	m_spCamera = std::make_shared<TPSCamera>();
@@ -116,6 +117,19 @@ void Player::Update()
 		// ゲームオーバー画面へ移行
 		if (GameSystem::GetInstance().GetSceneName() == "Game")
 		{
+			Math::Vector3 pos = GetPos();
+			pos.y += 0.7f;
+
+			// 爆発させる
+			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
+
+			spEffect->Init();
+			spEffect->SetAnimation(5, 5);
+			spEffect->SetPos(pos);
+			spEffect->SetChangeDir(true);
+			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Explosion.png"));
+			GameSystem::GetInstance().AddObject(spEffect);
+
 			Player::Change2D();
 			GameSystem::GetInstance().RequestChangeScene("Result");
 		}
@@ -127,30 +141,28 @@ void Player::Update()
 
 		m_spCamera->Update();
 
-		bool a = false;
+		m_start = false;
 
 		if (m_change)
 		{
-			cameraRotY += 3.0f;
-			if (cameraRotY >= 0.0f)
+			m_cameraRotY += 3.0f;
+			if (m_cameraRotY >= 0.0f)
 			{
-				cameraRotY = 0.0f;
+				m_cameraRotY = 0.0f;
+				m_start = true;
 			}
-
-			m_spCamera->SetLocalRotY(cameraRotY);
 		}
 		if (!m_change)
 		{
-			cameraRotY -= 90.0f;
-			if (cameraRotY <= -90.0f)
+			m_cameraRotY -= 90.0f;
+			if (m_cameraRotY <= -90.0f)
 			{
-				cameraRotY = -90.0f;
-				a = true;
+				m_cameraRotY = -90.0f;
+				m_start = true;
 			}
-			
-			GameSystem::GetInstance().RequestStartFlg(a);
-			m_spCamera->SetLocalRotY(cameraRotY);
 		}
+
+		m_spCamera->SetLocalRotY(m_cameraRotY);
 
 		Math::Matrix trans;
 		
@@ -229,26 +241,30 @@ void Player::Draw2D()
 	Math::Viewport vp;
 	D3D.GetViewport(vp);
 
-	int posX = static_cast<int>(-(vp.width * 0.5f) + (m_spLifeBackTex.get()->GetWidth() * 0.5f));
-	int posY = static_cast<int>((vp.height * 0.5f) - (m_spLifeBackTex.get()->GetHeight() * 0.5f));
+	int posX = static_cast<int>(-(vp.width * 0.5f) + (m_spLifeTex[0].get()->GetWidth() * 0.5f));
+	int posY = static_cast<int>((vp.height * 0.5f) - (m_spLifeTex[0].get()->GetHeight() * 0.5f));
 
 	SHADER->m_spriteShader.SetMatrix(Math::Matrix::Identity);
-	SHADER->m_spriteShader.DrawTex(m_spLifeBackTex.get(), posX + 10, posY - 10);
-	SHADER->m_spriteShader.DrawTex(m_spLifeBackTex.get(), posX + 120, posY - 10);
-	SHADER->m_spriteShader.DrawTex(m_spLifeBackTex.get(), posX + 230, posY - 10);
+	SHADER->m_spriteShader.DrawTex(m_spLifeTex[0].get(), posX + 10, posY - 10);
+	SHADER->m_spriteShader.DrawTex(m_spLifeTex[0].get(), posX + 120, posY - 10);
+	SHADER->m_spriteShader.DrawTex(m_spLifeTex[0].get(), posX + 230, posY - 10);
 
 	if (m_life > 0)
 	{
-		SHADER->m_spriteShader.DrawTex(m_spLifeTex.get(), posX + 10, posY - 10);
+		SHADER->m_spriteShader.DrawTex(m_spLifeTex[1].get(), posX + 10, posY - 10);
 	}
 	if (m_life > 1)
 	{
-		SHADER->m_spriteShader.DrawTex(m_spLifeTex.get(), posX + 120, posY - 10);
+		SHADER->m_spriteShader.DrawTex(m_spLifeTex[1].get(), posX + 120, posY - 10);
 	}
 	if (m_life > 2)
 	{
-		SHADER->m_spriteShader.DrawTex(m_spLifeTex.get(), posX + 230, posY - 10);
+		SHADER->m_spriteShader.DrawTex(m_spLifeTex[1].get(), posX + 230, posY - 10);
 	}
+
+	SHADER->m_spriteShader.DrawTex(m_spLifeTex[2].get(), posX + 10, posY - 10);
+	SHADER->m_spriteShader.DrawTex(m_spLifeTex[2].get(), posX + 120, posY - 10);
+	SHADER->m_spriteShader.DrawTex(m_spLifeTex[2].get(), posX + 230, posY - 10);
 
 	posX = static_cast<int>(-(vp.width * 0.5f) + (m_spLimitTex.get()->GetWidth() * 0.5f));
 	posY = static_cast<int>((vp.height * 0.5f) - (m_spLimitTex.get()->GetHeight() * 0.5f));
@@ -273,7 +289,6 @@ void Player::Change3D()
 		m_spCamera->SetProjectionMatrix(60.0f);
 		m_spCamera->SetLocalPos(Math::Vector3(0.0f, 0.0f, -5.0f));
 		m_spCamera->SetLocalRotX(15.0f);
-		m_spCamera->SetLocalRotY(0.0f);
 		m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 1.0f, 0.0f));
 	}
 
@@ -289,7 +304,6 @@ void Player::Change2D()
 		m_spCamera->SetProjectionMatrixOrth();
 		m_spCamera->SetLocalPos(Math::Vector3(1.0f, 2.0f, -1000.0f));
 		m_spCamera->SetLocalRotX(0.0f);
-		m_spCamera->SetLocalRotY(-90.0f);
 		m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 0.0f, 0.0f));
 	}
 
@@ -303,6 +317,8 @@ void Player::Release()
 
 void Player::UpdateMove(Math::Vector3& dstMove)
 {
+	if (!m_start) { return; }
+
 	float moveSpd = 0.06f;
 
 	DirectX::SimpleMath::Vector3 moveVec;

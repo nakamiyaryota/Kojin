@@ -39,8 +39,6 @@ void Effect2D::DrawEffect()
 	scale.z = m_mWorld.Forward().Length();
 
 	// 回転
-	//std::shared_ptr<KdCamera> gameCam = GameSystem::GetInstance().GetCamera();
-
 	if (m_changeDir)
 	{
 		float dir;
@@ -58,13 +56,6 @@ void Effect2D::DrawEffect()
 	{
 		mDraw = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(90.0f));
 	}
-
-	//if (gameCam)
-	//{
-	//	// カメラの逆行列の合成
-	//	Math::Matrix mCamInv = gameCam->GetCameraMatrix();
-	//	mCamInv.Invert();
-	//}
 
 	// 移動
 	mDraw.Translation(m_mWorld.Translation());

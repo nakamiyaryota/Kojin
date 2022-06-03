@@ -31,5 +31,4 @@ private:
 	const int OBJECT_SIZE = 20;
 	const int OBJECTFIX_SIZE = 1;
 	const int LIFT_SIZE = 4;
-	const int LIFTFIX_SIZE = 0;
 };

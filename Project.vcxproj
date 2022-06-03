@@ -154,7 +154,6 @@
     <ClInclude Include="Src\Application\Game\GameObject\GameObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Goal.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Lift.h" />
-    <ClInclude Include="Src\Application\Game\GameObject\LiftFix.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Player.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\ClearObject\ClearObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\ResultObject\ResultObject.h" />
@@ -200,7 +199,6 @@
     <ClCompile Include="Src\Application\Game\GameObject\GameObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Goal.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Lift.cpp" />
-    <ClCompile Include="Src\Application\Game\GameObject\LiftFix.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Player.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\ClearObject\ClearObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\ResultObject\ResultObject.cpp" />

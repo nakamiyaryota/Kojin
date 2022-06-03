@@ -19,8 +19,6 @@ public:
 
 	void RequestChangeFlg(bool flg) { m_canChange = flg; }
 
-	void RequestStartFlg(bool flg) { m_startChange = flg; }
-
 	void SetStageNumber(int number) { m_stageNumber = number; }
 
 	// オブジェクトの追加
@@ -92,7 +90,6 @@ private:
 
 	bool m_change = false;
 	bool m_canChange = false;
-	bool m_startChange = true;
 
 // シングルトン
 private:

@@ -3,7 +3,6 @@
 #include "StageObject.h"
 #include "StageObjectFix.h"
 #include "Lift.h"
-#include "LiftFix.h"
 #include "Goal.h"
 #include "Effect2D.h"
 
@@ -273,15 +272,6 @@ void StageMap::SecondStageInit()
 
 		spLift->Change2D();
 		GameSystem::GetInstance().AddObject(spLift);
-	}
-
-	// リフトオブジェクト(固定)をインスタンス化
-	for (int i = 0; i < LIFTFIX_SIZE; i++)
-	{
-		std::shared_ptr<LiftFix> spLiftFix = std::make_shared<LiftFix>();
-		spLiftFix->Init();
-
-		GameSystem::GetInstance().AddObject(spLiftFix);
 	}
 
 	// 2Dオブジェクトのインスタンス化
