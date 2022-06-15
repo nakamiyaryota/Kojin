@@ -1,11 +1,18 @@
 #include "StageObject.h"
 
+void StageObject::ImGuiProcess()
+{
+	std::string text = "Pos" + std::to_string(m_ObjectNumber);
+	ImGui::DragFloat3(text.c_str(), &m_worldPos.x, 0.1f);
+}
+
 void StageObject::Init()
 {
 }
 
 void StageObject::Update()
 {
+	UpdateWorldMatrix();
 }
 
 void StageObject::Draw()
@@ -22,6 +29,29 @@ void StageObject::DrawTranslucent()
 	{
 		SHADER->m_translucentShader.DrawModel(m_modelWork, m_mWorld);
 	}
+}
+
+void StageObject::Change3D()
+{
+	if (!m_change)
+	{
+		m_worldScale = Math::Vector3(1.0f, 1.0f, 1.0f);
+	}
+
+	SetPos(Math::Vector3(m_keepPos.x, m_mWorld._42, m_mWorld._43));
+
+	m_change = true;
+}
+
+void StageObject::Change2D()
+{
+	m_keepPos = m_mWorld.Translation();
+
+	m_worldScale = Math::Vector3(100.0f, 1.0f, 1.0f);
+
+	SetPos(Math::Vector3(m_keepPos.x, m_mWorld._42, m_mWorld._43));
+
+	m_change = false;
 }
 
 void StageObject::SetModel(const std::shared_ptr<KdModelData> spModel)
@@ -56,6 +86,18 @@ bool StageObject::CheckCollisionBump(const SphereInfo& info, BumpResult& result,
 	}
 
 	return result.m_isHit;
+}
+
+void StageObject::UpdateWorldMatrix()
+{
+	// ÉèÅ[ÉãÉhçsóÒÇÃçÏê¨
+	DirectX::SimpleMath::Matrix trans;
+	trans = trans.CreateTranslation(m_worldPos);
+
+	DirectX::SimpleMath::Matrix scale;
+	scale = scale.CreateScale(m_worldScale);
+
+	m_mWorld = scale * trans;
 }
 
 void StageObject::Release()

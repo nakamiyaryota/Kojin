@@ -17,6 +17,8 @@ void KdShaderManager::Init()
 	// 半透明シェーダー
 	m_translucentShader.Init();
 
+	m_genShadowMapShader.Init();
+
 	//============================================
 	// 定数バッファ
 	//============================================
@@ -62,6 +64,8 @@ void KdShaderManager::Release()
 	m_effectShader.Release();
 	m_spriteShader.Release();
 	m_translucentShader.Release();
+
+	m_genShadowMapShader.Release();
 
 	m_cb7_Camera.Release();
 	m_cb8_Light.Release();

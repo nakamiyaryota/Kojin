@@ -29,7 +29,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpszArgs, int
 // アプリケーション初期設定
 bool Application::Init(int w, int h)
 {
+#ifndef _DEBUG
 	ShowCursor(false);
+#endif
 
 	//===================================================================
 	// ウィンドウ作成
@@ -68,6 +70,19 @@ bool Application::Init(int w, int h)
 	if (bFullScreen) {
 		D3D.WorkSwapChain()->SetFullscreenState(TRUE, 0);
 	}
+
+	//===================================================================
+	// imgui
+	//===================================================================
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	// Setup Dear ImGui style
+	// ImGui::StyleColorsDark();
+	ImGui::StyleColorsClassic();
+	// Setup Platform/Renderer bindings
+	ImGui_ImplWin32_Init(m_window.GetWndHandle());
+	ImGui_ImplDX11_Init(D3D.WorkDev(), D3D.WorkDevContext());
 
 	//===================================================================
 	// オーディオ初期化
@@ -139,6 +154,16 @@ void Application::Execute()
 			break;
 		}
 
+		// ImGui開始
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		// ImGui Demo ウィンドウ表示 ※すごく参考になるウィンドウです。imgui_demo.cpp参照。
+		//ImGui::ShowDemoWindow(nullptr);
+
+		GameSystem::GetInstance().ImGuiProcess();
+
 		//=========================================
 		//
 		// オーディオ処理
@@ -167,6 +192,10 @@ void Application::Execute()
 
 		//gs.Draw();
 		GameSystem::GetInstance().Draw();
+
+		// Imguiのレンダリング：ここより上にimguiの描画はする事
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		// バックバッファから画面へ表示(描画コマンドを実行)
 		// スワップチェイン ＝ 画面につながっているもの

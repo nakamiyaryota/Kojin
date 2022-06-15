@@ -58,8 +58,11 @@ public:
 	GameObject() {}
 	virtual ~GameObject() { Release(); }
 
+	virtual void ImGuiProcess() {}
+
 	virtual void Init() {}
 	virtual void Update() {}
+	virtual void DrawShadowMap();
 	virtual void Draw();
 	virtual void DrawTranslucent() {} // 半透明描画
 	virtual void DrawEffect() {}
@@ -109,7 +112,7 @@ public:
 protected:
 	KdModelWork m_modelWork;
 	Math::Matrix m_mWorld;
-	Math::Vector3 m_Cpos = m_mWorld.Translation();
+	Math::Vector3 m_keepPos = m_mWorld.Translation();
 	bool m_change = false;
 
 	bool m_isAlive = true;

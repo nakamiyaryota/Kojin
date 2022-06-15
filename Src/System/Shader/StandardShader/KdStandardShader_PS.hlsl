@@ -6,6 +6,8 @@ Texture2D g_baseTex : register(t0);		// ベースカラーテクスチャ
 Texture2D g_emissiveTex : register(t1);	// エミッシブテクスチャ
 Texture2D g_mrTex : register(t2);		// メタリック/ラフネステクスチャ
 
+Texture2D g_dirLightShadowMap : register(t10);
+
 // サンプラ
 SamplerState g_ss : register(s0);
 
@@ -37,7 +39,7 @@ float4 main(VSOutput In) : SV_Target0
 
 	// 法線正規化
 	float3 wN = normalize(In.wN);
-	
+
 	//------------------------------------------
 	// 材質色
 	//------------------------------------------
@@ -47,7 +49,7 @@ float4 main(VSOutput In) : SV_Target0
 	float metallic = mr.b * g_Material.Metallic;
 	// 粗さ
 	float roughness = mr.g * g_Material.Roughness;
-	
+
 	// 材質の色
 	float4 baseColor = g_baseTex.Sample(g_ss, In.UV) * g_Material.BaseColor * In.Color;
 
@@ -60,12 +62,30 @@ float4 main(VSOutput In) : SV_Target0
 	float3 color = 0;
 
 	// ライト有効時
-	if(g_LightEnable)
+	if (g_LightEnable)
 	{
 		// 材質の拡散色　非金属ほど材質の色になり、金属ほど拡散色は無くなる
 		const float3 baseDiffuse = lerp(baseColor.rgb, float3(0, 0, 0), metallic);
 		// 材質の反射色　非金属ほど光の色をそのまま反射し、金属ほど材質の色が乗る
 		const float3 baseSpecular = lerp(0.04, baseColor.rgb, metallic);
+
+		// シャドウマッピング(影判定)
+		float shadow = 1.0; // 光が当たっているピクセルであれば1、当たっていなくて影になっていたら0
+
+		// ライトのビュー行列と射影行列で変換(シャドウマップと同じ射影座標系に変換)
+		float4 dlPos = mul(float4(In.wPos, 1), g_DL_mViewProj);
+		// 深度情報を求める
+		dlPos.xyz /= dlPos.w;
+
+		if (abs(dlPos.x) <= 1.0 && abs(dlPos.y) <= 1.0 && abs(dlPos.z) <= 1.0)
+		{
+			float2 uv = dlPos.xy * float2(1, -1) * 0.5f + 0.5f;
+
+			// シャドウアクネ対策
+			float z = dlPos.z - 0.002;
+
+			shadow = g_dirLightShadowMap.Sample(g_ss, uv).r < z ? 0 : 1.0;
+		}
 
 		//------------------
 		// 平行光
@@ -81,7 +101,7 @@ float4 main(VSOutput In) : SV_Target0
 			lightDiffuse /= 3.1415926535;
 
 			// 光の色 * 材質の拡散色 * 透明率
-			color += (g_DL_Color * lightDiffuse) * baseDiffuse * baseColor.a;
+			color += (g_DL_Color * lightDiffuse) * baseDiffuse * baseColor.a * shadow;
 		}
 
 		//// Specular(反射色) 正規化Blinn-Phong NDFを使用
@@ -91,10 +111,10 @@ float4 main(VSOutput In) : SV_Target0
 		//	// ラフネスから、Blinn-Phong用のSpecularPowerを求める
 		//	float smoothness = 1.0 - roughness;         // ラフネスを逆転させ「滑らか」さにする
 		//	float specPower = pow(2, 13 * smoothness);  // 1～8192
-	  
+
 		//	// Blinn-Phong NDF
 		//	float spec = BlinnPhong(g_DL_Dir, vCam, wN, specPower);
-		
+
 		//	// 光の色 * 反射光の強さ * 材質の反射色 * 正規化係数 * 透明率
 		//	color += (g_DL_Color * spec) * baseSpecular * baseColor.a;
 		//}
@@ -126,7 +146,7 @@ float4 main(VSOutput In) : SV_Target0
 		// 適用
 		color.rgb = lerp(g_DistanceFogColor, color.rgb, f);
 	}
-	
+
 	//------------------------------------------
 	// 出力
 	//------------------------------------------

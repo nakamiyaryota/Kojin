@@ -12,8 +12,6 @@ public:
 	void Init() override;
 	void FirstStageInit();
 	void SecondStageInit();
-	void Draw() override;
-	void DrawTranslucent() override;
 
 	// 「ステージ」としてクラスIDを返す
 	const GameObject::ClassID GetClassID() const override
@@ -26,6 +24,9 @@ public:
 
 private:
 	void Release();
+
+	json11::Json m_jsonObjFileName = nullptr;
+	json11::Json m_jsonObjPosition = nullptr;
 
 	const int ENEMY_SIZE = 3;
 	const int OBJECT_SIZE = 20;

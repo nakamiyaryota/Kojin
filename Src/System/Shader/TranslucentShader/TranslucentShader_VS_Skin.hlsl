@@ -1,5 +1,5 @@
 #include "../inc_KdCommon.hlsli"
-#include "inc_KdTranslucentShader.hlsli"
+#include "inc_TranslucentShader.hlsli"
 
 VSOutput main(
 	float4 pos : POSITION,	// í∏ì_ç¿ïW

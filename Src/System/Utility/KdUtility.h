@@ -88,4 +88,28 @@ std::string KdFormat(const std::string& fmt, Args ... args)
 	return std::string(&buf[0], &buf[0] + len);
 }
 
+//===========================================
+//
+// JSON関係
+//
+//===========================================
+// JSON読み込み
+inline json11::Json KdLoadJSON(const std::string& filename)
+{
+	// JSONファイルを開く
+	std::ifstream ifs(filename);
+	if (!ifs)return nullptr;
+
+	// 文字列として全て読み込む
+	std::string strJson((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+
+	// 文字列JSONを解析(パース)する
+	std::string err;
+	json11::Json jsonObj = json11::Json::parse(strJson, err);
+	if (err.size() > 0)return nullptr;
+
+	return jsonObj;
+}
+
+
 void KdGetTextuxxreInfo(ID3D11View* view, D3D11_TEXTURE2D_DESC& outDesc);

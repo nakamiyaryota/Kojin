@@ -25,8 +25,9 @@ public:
 
 	void SetChangeDir(bool flg = false) { m_changeDir = flg; }
 
+	void SetChange(bool flg = false) { m_change = flg; }
+
 private:
-	void UpdateCollision();
 
 	// 四角ポリゴン
 	KdSquarePolygon m_poly;

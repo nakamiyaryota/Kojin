@@ -6,7 +6,7 @@
 
 void TitleStageMap::Init()
 {
-	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageMap/TitleStageMap.gltf"));
+	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageMap/StageMap1.gltf"));
 
 	for (int i = 0; i < OBJECT_SIZE; i++)
 	{
@@ -19,6 +19,7 @@ void TitleStageMap::Init()
 			spStageObject->SetWorldMatrix(5.5f, 4.5f);
 		}
 
+		spStageObject->SetObjectNumber(i);
 		spStageObject->Change2D();
 		GameSystem::GetInstance().AddObject(spStageObject);
 	}

@@ -1,5 +1,6 @@
 ﻿#include "StageMap.h"
-#include "Enemy.h"
+#include "FirstEnemy.h"
+#include "SecondEnemy.h"
 #include "StageObject.h"
 #include "StageObjectFix.h"
 #include "Lift.h"
@@ -10,6 +11,11 @@ void StageMap::Init()
 {
 	if (!GameSystem::GetInstance().GetStageNumber()) { return; }
 
+	// Jsonファイル読み込み
+	m_jsonObjFileName = KdLoadJSON("Data/Json/StageObjectFileName.json");
+	m_jsonObjPosition = KdLoadJSON("Data/Json/StageObjectPosition.json");
+
+	// ステージセレクト
 	if (GameSystem::GetInstance().GetStageNumber() == 1)
 	{
 		FirstStageInit();
@@ -31,12 +37,61 @@ void StageMap::FirstStageInit()
 
 	std::shared_ptr<Goal> spGoal = std::make_shared<Goal>();
 	spGoal->Init();
-	spGoal->SetWorldMatrix(0.0f, 30.0f, 0.0f);
+	spGoal->SetWorldMatrix(0.0f, 40.0f, 0.0f);
 	spGoal->Change2D();
 	GameSystem::GetInstance().AddObject(spGoal);
 
+	// 敵をインスタンス化
+	for (int i = 0; i < 1; i++)
+	{
+		std::shared_ptr<FirstEnemy> spEnemy = std::make_shared<FirstEnemy>();
+		spEnemy->Init();
+
+		if (i == 0)
+		{
+			spEnemy->SetWorldMatrix(4.0f, 10.0f);
+			spEnemy->SetActionRange(6.0f, 13.0f);
+		}
+
+		spEnemy->Change3D();
+		spEnemy->Change2D();
+		GameSystem::GetInstance().AddObject(spEnemy);
+	}
+	for (int i = 0; i < 1; i++)
+	{
+		std::shared_ptr<SecondEnemy> spEnemy = std::make_shared<SecondEnemy>();
+		spEnemy->Init();
+
+		if (i == 0)
+		{
+			spEnemy->SetWorldMatrix(-4.0f, 30.0f);
+		}
+
+		spEnemy->Change3D();
+		spEnemy->Change2D();
+		GameSystem::GetInstance().AddObject(spEnemy);
+	}
+
+	for (int i = 0; i < m_jsonObjFileName["ObjectSize1"].number_value(); i++)
+	{
+		std::shared_ptr<StageObject> spStageObject = std::make_shared<StageObject>();
+		spStageObject->Init();
+
+		spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData(m_jsonObjFileName["ModelFilename" + std::to_string(GameSystem::GetInstance().GetStageNumber()) + "_" + std::to_string(i)].string_value()));
+		
+		float pos[3];
+		pos[0] = (float)m_jsonObjPosition["ObjectPos" + std::to_string(GameSystem::GetInstance().GetStageNumber()) + "_" + std::to_string(i) + "0"].number_value();
+		pos[1] = (float)m_jsonObjPosition["ObjectPos" + std::to_string(GameSystem::GetInstance().GetStageNumber()) + "_" + std::to_string(i) + "1"].number_value();
+		pos[2] = (float)m_jsonObjPosition["ObjectPos" + std::to_string(GameSystem::GetInstance().GetStageNumber()) + "_" + std::to_string(i) + "2"].number_value();
+		spStageObject->SetWorldMatrix(pos[0], pos[2], pos[1]);
+
+		spStageObject->SetObjectNumber(i);
+		spStageObject->Change2D();
+		GameSystem::GetInstance().AddObject(spStageObject);
+	}
+
 	// 2Dオブジェクトのインスタンス化
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		// 山描画
 		{
@@ -71,7 +126,7 @@ void StageMap::FirstStageInit()
 
 	}
 
-	for (int i = 0; i < 21; i++)
+	for (int i = 0; i < 18; i++)
 	{
 		std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
 		spEffect->Init();
@@ -96,7 +151,7 @@ void StageMap::SecondStageInit()
 	// 敵をインスタンス化
 	for (int i = 0; i < ENEMY_SIZE; i++)
 	{
-		std::shared_ptr<Enemy> spEnemy = std::make_shared<Enemy>();
+		std::shared_ptr<SecondEnemy> spEnemy = std::make_shared<SecondEnemy>();
 		spEnemy->Init();
 
 		if (i == 0)
@@ -124,107 +179,91 @@ void StageMap::SecondStageInit()
 		std::shared_ptr<StageObject> spStageObject = std::make_shared<StageObject>();
 		spStageObject->Init();
 
+		spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData(m_jsonObjFileName["ModelFilename" + std::to_string(GameSystem::GetInstance().GetStageNumber()) + "_" + std::to_string(i)].string_value()));
+
 		if (i == 0)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 6.0f);
+			
 		}
 		if (i == 1)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject5.gltf"));
 			spStageObject->SetWorldMatrix(-5.0f, 21.0f);
 		}
 		if (i == 2)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject5.gltf"));
 			spStageObject->SetWorldMatrix(5.0f, 23.0f);
 		}
 		if (i == 3)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(4.5f, 27.5f, -3.0f);
 		}
 		if (i == 4)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(1.5f, 28.5f, -2.0f);
 		}
 		if (i == 5)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(-1.5f, 29.5f, -1.0f);
 		}
 		if (i == 6)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(-4.5f, 30.5f, 0.0f);
 		}
 		if (i == 7)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject3.gltf"));
 			spStageObject->SetWorldMatrix(0.0f, 33.0f, 0.0f);
 		}
 		if (i == 8)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject3.gltf"));
 			spStageObject->SetWorldMatrix(0.0f, 34.0f, -1.0f);
 		}
 		if (i == 9)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject3.gltf"));
 			spStageObject->SetWorldMatrix(0.0f, 35.0f, -2.0f);
 		}
 		if (i == 10)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject3.gltf"));
 			spStageObject->SetWorldMatrix(0.0f, 36.0f, -3.0f);
 		}
 		if (i == 11)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject8.gltf"));
 			spStageObject->SetWorldMatrix(4.5f, 45.0f, 0.0f);
 		}
 		if (i == 12)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 42.0f, -3.0f);
 		}
 		if (i == 13)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 43.0f, -2.0f);
 		}
 		if (i == 14)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 44.0f, -1.0f);
 		}
 		if (i == 15)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 45.0f, 0.0f);
 		}
 		if (i == 16)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(5.5f, 58.0f, 0.0f);
 		}
 		if (i == 17)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(-2.5f, 69.5f, 11.5f);
 		}
 		if (i == 18)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject4.gltf"));
 			spStageObject->SetWorldMatrix(2.5f, 74.5f, 11.5f);
 		}
 		if (i == 19)
 		{
-			spStageObject->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject2.gltf"));
 			spStageObject->SetWorldMatrix(2.5f, 72.0f, 16.0f);
 		}
 
+		spStageObject->SetObjectNumber(i);
 		spStageObject->Change2D();
 		GameSystem::GetInstance().AddObject(spStageObject);
 	}
@@ -238,7 +277,7 @@ void StageMap::SecondStageInit()
 		if (i == 0)
 		{
 			spStageObjectFix->SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/StageObject/StageObject9.gltf"));
-			spStageObjectFix->SetWorldMatrix(0.0f, 72.0f, 11.0f);
+			spStageObjectFix->SetWorldMatrix(0.0f, 72.0f, 11.5f);
 		}
 
 		GameSystem::GetInstance().AddObject(spStageObjectFix);
@@ -321,22 +360,6 @@ void StageMap::SecondStageInit()
 
 			GameSystem::GetInstance().AddObject(spEffect);
 		}
-	}
-}
-
-void StageMap::Draw()
-{
-	if (!m_hit)
-	{
-		SHADER->m_standardShader.DrawModel(m_modelWork, m_mWorld);
-	}
-}
-
-void StageMap::DrawTranslucent()
-{
-	if (m_hit)
-	{
-		SHADER->m_translucentShader.DrawModel(m_modelWork, m_mWorld);
 	}
 }
 

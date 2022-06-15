@@ -1,7 +1,7 @@
-ï»¿#include "Enemy.h"
+#include "SecondEnemy.h"
 #include "Arrow.h"
 
-void Enemy::Init()
+void SecondEnemy::Init()
 {
 	m_modelWork.SetModel(GameSystem::GetInstance().WorkResourceFactory().GetModelData("Data/Models/Enemy/Enemy1.gltf"));
 
@@ -9,7 +9,7 @@ void Enemy::Init()
 	m_bumpSphereInfo.m_pos.y = 0.7f;
 }
 
-void Enemy::Update()
+void SecondEnemy::Update()
 {
 	Math::Vector3 vMove;
 
@@ -17,21 +17,21 @@ void Enemy::Update()
 
 	UpdateWorldMatrix();
 
-	// çŸ¢ã®ç™ºå°„
+	// –î‚Ì”­Ë
 	ShotArrow();
 
 }
 
-void Enemy::Change3D()
+void SecondEnemy::Change3D()
 {
-	SetPos(Math::Vector3(m_Cpos.x, m_mWorld._42, m_mWorld._43));
+	SetPos(Math::Vector3(m_keepPos.x, m_mWorld._42, m_mWorld._43));
 
 	m_change = true;
 }
 
-void Enemy::Change2D()
+void SecondEnemy::Change2D()
 {
-	m_Cpos = m_mWorld.Translation();
+	m_keepPos = m_mWorld.Translation();
 
 	for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
 	{
@@ -45,11 +45,11 @@ void Enemy::Change2D()
 	m_change = false;
 }
 
-void Enemy::Release()
+void SecondEnemy::Release()
 {
 }
 
-void Enemy::UpdateRotate(const Math::Vector3& srcMove)
+void SecondEnemy::UpdateRotate(const Math::Vector3& srcMove)
 {
 	for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
 	{
@@ -66,9 +66,9 @@ void Enemy::UpdateRotate(const Math::Vector3& srcMove)
 	}
 }
 
-void Enemy::UpdateWorldMatrix()
+void SecondEnemy::UpdateWorldMatrix()
 {
-	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®ä½œæˆ
+	// ƒ[ƒ‹ƒhs—ñ‚Ìì¬
 	DirectX::SimpleMath::Matrix trans;
 	trans = trans.CreateTranslation(m_worldPos);
 
@@ -81,7 +81,7 @@ void Enemy::UpdateWorldMatrix()
 	m_mWorld = rotation * trans;
 }
 
-void Enemy::ShotArrow()
+void SecondEnemy::ShotArrow()
 {
 	m_lifeSpan--;
 	if (m_lifeSpan <= 0)
@@ -89,35 +89,36 @@ void Enemy::ShotArrow()
 		m_canShot = true;
 	}
 
-	// å¼¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã—ã€ä½•ç™ºã§ã‚‚å‡ºã›ã‚‹ã‚ˆã†ã«ã™ã‚‹
+	// ’eƒIƒuƒWƒFƒNƒg‚ğì¬‚µA‰½”­‚Å‚ào‚¹‚é‚æ‚¤‚É‚·‚é
 	if (m_canShot)
 	{
-		// çŸ¢ã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
+		// –î‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»
 		std::shared_ptr<Arrow> spArrow = std::make_shared<Arrow>();
 		spArrow->Init();
 
-		// æ•µã®ä½ç½®ã€å‘ã„ã¦ã„ã‚‹æ–¹å‘ã«çŸ¢ã‚’è¨­å®š
+		// “G‚ÌˆÊ’uAŒü‚¢‚Ä‚¢‚é•ûŒü‚É–î‚ğİ’è
 		spArrow->SetWorldMatrix(m_mWorld);
 
-		// ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰ãƒãƒ¼ãƒ‰ã‚’æ¢ã™
+		// ƒ‚ƒfƒ‹‚©‚çƒm[ƒh‚ğ’T‚·
 		const KdModelWork::Node* pNode = m_modelWork.FindNode("bow");
 
-		// æ¢ã—ãŸãƒãƒ¼ãƒ‰ãŒã‚ã‚Œã°ã€ãã®å ´æ‰€ã‹ã‚‰ç™ºå°„ã™ã‚‹
+		// ’T‚µ‚½ƒm[ƒh‚ª‚ ‚ê‚ÎA‚»‚ÌêŠ‚©‚ç”­Ë‚·‚é
 		if (pNode)
 		{
 			spArrow->SetWorldMatrix(pNode->m_worldTransform * m_mWorld);
 		}
 
-		spArrow->SetPosX(m_Cpos.x);
+		spArrow->SetPosX(m_keepPos.x);
+		spArrow->SetChange(m_change);
 
 		if (!m_change)
 		{
 			spArrow->Change2D();
 		}
-		// çŸ¢ã®ãƒªã‚¹ãƒˆã«è¿½åŠ 
+		// –î‚ÌƒŠƒXƒg‚É’Ç‰Á
 		GameSystem::GetInstance().AddObject(spArrow);
 
-		// çŸ¢ã‚’æ’ƒã£ãŸã®ã§ä¸€æ—¦æ’ƒã¦ãªãã™ã‚‹
+		// –î‚ğŒ‚‚Á‚½‚Ì‚Åˆê’UŒ‚‚Ä‚È‚­‚·‚é
 		m_canShot = false;
 		m_lifeSpan = 180;
 	}

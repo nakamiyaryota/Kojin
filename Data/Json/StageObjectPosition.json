@@ -1,0 +1,31 @@
+{
+  "ObjectPos1_00": 5.5,
+  "ObjectPos1_01": 0.0,
+  "ObjectPos1_02": 2.0,
+  "ObjectPos1_10": -5.5,
+  "ObjectPos1_11": 0.0,
+  "ObjectPos1_12": 5.0,
+  "ObjectPos1_20": 4.5,
+  "ObjectPos1_21": -3.0,
+  "ObjectPos1_22": 15.0,
+  "ObjectPos1_30": 1.5,
+  "ObjectPos1_31": -2.0,
+  "ObjectPos1_32": 16.0,
+  "ObjectPos1_40": -1.5,
+  "ObjectPos1_41": -1.0,
+  "ObjectPos1_42": 17.0,
+  "ObjectPos1_50": -4.5,
+  "ObjectPos1_51": 0.0,
+  "ObjectPos1_52": 18.0,
+  "ObjectPos1_60": 0.0,
+  "ObjectPos1_61": 0.0,
+  "ObjectPos1_62": 19.0,
+
+
+  "Position1_10": -5.5,
+  "Position1_11": 5.0,
+  "Position1_12": 0.0,
+
+
+  "Position1_0": [ 4.0, 0.0, 0.0 ]
+}

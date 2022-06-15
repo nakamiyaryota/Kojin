@@ -141,6 +141,16 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Library\imgui\imconfig.h" />
+    <ClInclude Include="..\Library\imgui\imgui.h" />
+    <ClInclude Include="..\Library\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\Library\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\Library\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Library\imgui\imgui_stdlib.h" />
+    <ClInclude Include="..\Library\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Library\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Library\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Library\json11KdCustom\json11.hpp" />
     <ClInclude Include="..\Library\strconv.h" />
     <ClInclude Include="..\Library\tinygltf\json.hpp" />
     <ClInclude Include="..\Library\tinygltf\stb_image.h" />
@@ -150,7 +160,7 @@
     <ClInclude Include="Src\Application\Game\Camera\TPSCamera.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Arrow.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Effect2D.h" />
-    <ClInclude Include="Src\Application\Game\GameObject\Enemy.h" />
+    <ClInclude Include="Src\Application\Game\GameObject\FirstEnemy.h" />
     <ClInclude Include="Src\Application\Game\GameObject\GameObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Goal.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Lift.h" />
@@ -161,6 +171,7 @@
     <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\Signboard.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleStageMap.h" />
+    <ClInclude Include="Src\Application\Game\GameObject\SecondEnemy.h" />
     <ClInclude Include="Src\Application\Game\GameObject\StageMap.h" />
     <ClInclude Include="Src\Application\Game\GameObject\StageObject.h" />
     <ClInclude Include="Src\Application\Game\GameObject\StageObjectFix.h" />
@@ -183,19 +194,29 @@
     <ClInclude Include="Src\System\Math\KdAnimation.h" />
     <ClInclude Include="Src\System\Math\KdCollision.h" />
     <ClInclude Include="Src\System\Shader\EffectShader\KdEffectShader.h" />
+    <ClInclude Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMapShader.h" />
     <ClInclude Include="Src\System\Shader\KdShaderManager.h" />
     <ClInclude Include="Src\System\Shader\SpriteShader\KdSpriteShader.h" />
     <ClInclude Include="Src\System\Shader\StandardShader\KdStandardShader.h" />
     <ClInclude Include="src\System\KdSystem.h" />
-    <ClInclude Include="Src\System\Shader\TranslucentShader\KdTranslucentShader.h" />
+    <ClInclude Include="Src\System\Shader\TranslucentShader\TranslucentShader.h" />
     <ClInclude Include="src\System\Utility\KdUtility.h" />
     <ClInclude Include="src\System\Window\KdWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Library\imgui\imgui.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\Library\json11KdCustom\json11.cpp" />
     <ClCompile Include="Src\Application\Game\Camera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Arrow.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Effect2D.cpp" />
-    <ClCompile Include="Src\Application\Game\GameObject\Enemy.cpp" />
+    <ClCompile Include="Src\Application\Game\GameObject\FirstEnemy.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\GameObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Goal.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Lift.cpp" />
@@ -206,6 +227,7 @@
     <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\Signboard.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\Scene\TitleObject\TitleStageMap.cpp" />
+    <ClCompile Include="Src\Application\Game\GameObject\SecondEnemy.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\StageMap.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\StageObject.cpp" />
     <ClCompile Include="Src\Application\Game\GameObject\StageObjectFix.cpp" />
@@ -231,19 +253,21 @@
     <ClCompile Include="Src\System\Math\KdAnimation.cpp" />
     <ClCompile Include="Src\System\Math\KdCollision.cpp" />
     <ClCompile Include="Src\System\Shader\EffectShader\KdEffectShader.cpp" />
+    <ClCompile Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMapShader.cpp" />
     <ClCompile Include="Src\System\Shader\KdShaderManager.cpp" />
     <ClCompile Include="Src\System\Shader\SpriteShader\KdSpriteShader.cpp" />
     <ClCompile Include="Src\System\Shader\StandardShader\KdStandardShader.cpp" />
-    <ClCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader.cpp" />
+    <ClCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader.cpp" />
     <ClCompile Include="Src\System\Utility\KdUtility.cpp" />
     <ClCompile Include="src\System\Window\KdWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\System\Shader\EffectShader\inc_KdEffectShader.hlsli" />
+    <None Include="Src\System\Shader\GenerateShadowMap\inc_GenerateShadowMapShader.hlsli" />
     <None Include="Src\System\Shader\inc_KdCommon.hlsli" />
     <None Include="Src\System\Shader\SpriteShader\inc_KdSpriteShader.hlsli" />
     <None Include="Src\System\Shader\StandardShader\inc_KdStandardShader.hlsli" />
-    <None Include="Src\System\Shader\TranslucentShader\inc_KdTranslucentShader.hlsli" />
+    <None Include="Src\System\Shader\TranslucentShader\inc_TranslucentShader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Src\System\Shader\EffectShader\KdEffectShader_PS.hlsl">
@@ -253,6 +277,14 @@
     <FxCompile Include="Src\System\Shader\EffectShader\KdEffectShader_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMap_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMap_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\System\Shader\SpriteShader\KdSpriteShader_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -274,15 +306,15 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader_PS.hlsl">
+    <FxCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader_VS.hlsl">
+    <FxCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader_VS_Skin.hlsl">
+    <FxCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader_VS_Skin.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>

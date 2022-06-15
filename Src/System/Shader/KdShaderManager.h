@@ -3,7 +3,8 @@
 #include "EffectShader/KdEffectShader.h"
 #include "StandardShader/KdStandardShader.h"
 #include "SpriteShader/KdSpriteShader.h"
-#include "TranslucentShader/KdTranslucentShader.h"
+#include "TranslucentShader/TranslucentShader.h"
+#include "GenerateShadowMap/GenerateShadowMapShader.h"
 
 //==========================================================
 //
@@ -35,7 +36,9 @@ public:
 	KdStandardShader		m_standardShader;		// 3Dモデル描画シェーダ
 	KdEffectShader			m_effectShader;			// エフェクト描画シェーダ
 	KdSpriteShader			m_spriteShader;			// 2Dテクスチャ描画シェーダ
-	KdTranslucentShader     m_translucentShader;    // 3Dモデル半透明描画シェーダ
+	TranslucentShader       m_translucentShader;    // 3Dモデル半透明描画シェーダ
+
+	GenerateShadowMapShader m_genShadowMapShader;   // 影描画用の深度マップ作成
 
 	//==========================
 	//
@@ -72,10 +75,12 @@ public:
 		float				_blank1;
 
 		// 平行光
-		Math::Vector3		DL_Dir = { -0.5,-1,-0.5 };    // 光の方向
+		Math::Vector3		DL_Dir = { 0,-1,0.01 };    // 光の方向
 		float				_blank2;
 		Math::Vector3		DL_Color = { 1,1,1 };  // 光の色
 		float				_blank3;
+
+		Math::Matrix        DL_mViewProj;  // 平行光のビューと正射影行列を合成したもの
 	};
 
 	// ライト定数バッファ

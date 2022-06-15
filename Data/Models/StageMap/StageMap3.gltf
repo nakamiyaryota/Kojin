@@ -48,13 +48,13 @@
             "name" : "Cube",
             "scale" : [
                 12,
-                4,
-                100
+                10,
+                10
             ],
             "translation" : [
                 0,
-                -2,
-                -45
+                -5,
+                0
             ]
         }
     ],
@@ -143,41 +143,41 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 8390,
+            "count" : 10378,
             "max" : [
                 0.5,
-                0.375,
+                0.44999998807907104,
                 0.5
             ],
             "min" : [
                 -0.5,
                 -0.5,
-                -0.5
+                -9.40000057220459
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 8390,
+            "count" : 10378,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 8390,
+            "count" : 10378,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 16068,
+            "count" : 21120,
             "type" : "SCALAR"
         },
         {
             "bufferView" : 4,
             "componentType" : 5126,
-            "count" : 5188,
+            "count" : 5262,
             "max" : [
                 0.5,
                 0.5,
@@ -185,75 +185,75 @@
             ],
             "min" : [
                 -0.5,
-                0.375,
-                -0.5
+                0.44999998807907104,
+                -9.40000057220459
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 5,
             "componentType" : 5126,
-            "count" : 5188,
+            "count" : 5262,
             "type" : "VEC3"
         },
         {
             "bufferView" : 6,
             "componentType" : 5126,
-            "count" : 5188,
+            "count" : 5262,
             "type" : "VEC2"
         },
         {
             "bufferView" : 7,
             "componentType" : 5123,
-            "count" : 8220,
+            "count" : 8268,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 100680,
+            "byteLength" : 124536,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 100680,
-            "byteOffset" : 100680
+            "byteLength" : 124536,
+            "byteOffset" : 124536
         },
         {
             "buffer" : 0,
-            "byteLength" : 67120,
-            "byteOffset" : 201360
+            "byteLength" : 83024,
+            "byteOffset" : 249072
         },
         {
             "buffer" : 0,
-            "byteLength" : 32136,
-            "byteOffset" : 268480
+            "byteLength" : 42240,
+            "byteOffset" : 332096
         },
         {
             "buffer" : 0,
-            "byteLength" : 62256,
-            "byteOffset" : 300616
+            "byteLength" : 63144,
+            "byteOffset" : 374336
         },
         {
             "buffer" : 0,
-            "byteLength" : 62256,
-            "byteOffset" : 362872
+            "byteLength" : 63144,
+            "byteOffset" : 437480
         },
         {
             "buffer" : 0,
-            "byteLength" : 41504,
-            "byteOffset" : 425128
+            "byteLength" : 42096,
+            "byteOffset" : 500624
         },
         {
             "buffer" : 0,
-            "byteLength" : 16440,
-            "byteOffset" : 466632
+            "byteLength" : 16536,
+            "byteOffset" : 542720
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 483072,
+            "byteLength" : 559256,
             "uri" : "StageMap3.bin"
         }
     ]

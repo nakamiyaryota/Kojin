@@ -118,17 +118,7 @@ void Player::Update()
 		if (GameSystem::GetInstance().GetSceneName() == "Game")
 		{
 			Math::Vector3 pos = GetPos();
-			pos.y += 0.7f;
-
-			// 爆発させる
-			std::shared_ptr<Effect2D> spEffect = std::make_shared<Effect2D>();
-
-			spEffect->Init();
-			spEffect->SetAnimation(5, 5);
-			spEffect->SetPos(pos);
-			spEffect->SetChangeDir(true);
-			spEffect->SetTexture(GameSystem::GetInstance().WorkResourceFactory().GetTexture("Data/Textures/Game/Explosion.png"));
-			GameSystem::GetInstance().AddObject(spEffect);
+			pos.y += 1.0f;
 
 			Player::Change2D();
 			GameSystem::GetInstance().RequestChangeScene("Result");
@@ -282,7 +272,7 @@ void Player::Draw2D()
 
 void Player::Change3D()
 {
-	m_worldPos.x = m_Cpos.x;
+	m_worldPos.x = m_keepPos.x;
 	
 	if (!m_change)
 	{
@@ -292,12 +282,14 @@ void Player::Change3D()
 		m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 1.0f, 0.0f));
 	}
 
+	SHADER->m_cb8_Light.Work().DL_Dir = Math::Vector3(0.0f, -1.0f, 0.01f);
+
 	m_change = true;
 }
 
 void Player::Change2D()
 {
-	m_Cpos = m_mWorld.Translation();
+	m_keepPos = m_mWorld.Translation();
 
 	if (m_change)
 	{
@@ -306,6 +298,8 @@ void Player::Change2D()
 		m_spCamera->SetLocalRotX(0.0f);
 		m_spCamera->SetLocalGazePosition(Math::Vector3(0.0f, 0.0f, 0.0f));
 	}
+
+	SHADER->m_cb8_Light.Work().DL_Dir = Math::Vector3(-0.5f, -1.0f, -0.5f);
 
 	m_change = false;
 }
@@ -468,7 +462,7 @@ void Player::UpdateCollision()
 		BumpResult bumpResult;
 
 		// 自分と当たる対象に呼び出してもらう
-		bool result = spObject->CheckCollisionBump(sphereInfo, bumpResult, 0.5);
+		bool result = spObject->CheckCollisionBump(sphereInfo, bumpResult);
 		if (result)
 		{
 			// 押し戻す処理
@@ -711,9 +705,9 @@ void Player::UpdateWorldMatrix()
 
 void Player::Update2D()
 {
-	m_worldPos.x = m_Cpos.x;
+	m_worldPos.x = m_keepPos.x;
 
-	m_changeTime++;
+	m_changeTime += 4;
 	
 	if (m_changeTime >= MAX_TIME)
 	{

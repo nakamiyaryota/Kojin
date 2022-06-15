@@ -70,6 +70,15 @@
     <Filter Include="Src\System\Shader\TranslucentShader">
       <UniqueIdentifier>{2c34ba65-69d6-4ef2-9b02-04b62f12ccc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\System\Shader\GenerateShadowMap">
+      <UniqueIdentifier>{e5187e07-c6ac-4863-8b0e-189a261d1016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\imgui">
+      <UniqueIdentifier>{3a322d41-c214-4b36-a035-2054846a56c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\json11KdCustom">
+      <UniqueIdentifier>{a65246e5-a6b9-42c1-8441-50d3408a3760}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -180,9 +189,6 @@
     <ClInclude Include="Src\Application\Game\GameObject\Scene\ResultObject\ResultObject.h">
       <Filter>Src\Application\Game\GameObject\Scene\ResultObject</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Game\GameObject\Enemy.h">
-      <Filter>Src\Application\Game\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Utility\Input.h">
       <Filter>Src\Application\Utility</Filter>
     </ClInclude>
@@ -195,7 +201,7 @@
     <ClInclude Include="Src\Application\Game\GameObject\Scene\ClearObject\ClearObject.h">
       <Filter>Src\Application\Game\GameObject\Scene\ClearObject</Filter>
     </ClInclude>
-    <ClInclude Include="Src\System\Shader\TranslucentShader\KdTranslucentShader.h">
+    <ClInclude Include="Src\System\Shader\TranslucentShader\TranslucentShader.h">
       <Filter>Src\System\Shader\TranslucentShader</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Game\GameObject\StageObjectFix.h">
@@ -218,6 +224,45 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Game\GameObject\Scene\SceneObject.h">
       <Filter>Src\Application\Game\GameObject\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMapShader.h">
+      <Filter>Src\System\Shader\GenerateShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\json11KdCustom\json11.hpp">
+      <Filter>Library\json11KdCustom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imgui_impl_dx11.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imgui_impl_win32.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imgui_internal.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imgui_stdlib.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imstb_rectpack.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imstb_textedit.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imstb_truetype.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imconfig.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Library\imgui\imgui.h">
+      <Filter>Library\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Game\GameObject\FirstEnemy.h">
+      <Filter>Src\Application\Game\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Game\GameObject\SecondEnemy.h">
+      <Filter>Src\Application\Game\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +353,6 @@
     <ClCompile Include="Src\Application\Game\GameObject\Scene\ResultObject\ResultObject.cpp">
       <Filter>Src\Application\Game\GameObject\Scene\ResultObject</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Game\GameObject\Enemy.cpp">
-      <Filter>Src\Application\Game\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Utility\Input.cpp">
       <Filter>Src\Application\Utility</Filter>
     </ClCompile>
@@ -323,7 +365,7 @@
     <ClCompile Include="Src\Application\Game\GameObject\Scene\ClearObject\ClearObject.cpp">
       <Filter>Src\Application\Game\GameObject\Scene\ClearObject</Filter>
     </ClCompile>
-    <ClCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader.cpp">
+    <ClCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader.cpp">
       <Filter>Src\System\Shader\TranslucentShader</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Game\GameObject\StageObjectFix.cpp">
@@ -347,6 +389,42 @@
     <ClCompile Include="Src\Application\Game\GameObject\Scene\SceneObject.cpp">
       <Filter>Src\Application\Game\GameObject\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMapShader.cpp">
+      <Filter>Src\System\Shader\GenerateShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\json11KdCustom\json11.cpp">
+      <Filter>Library\json11KdCustom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_demo.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_draw.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_impl_dx11.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_impl_win32.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_stdlib.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_tables.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui_widgets.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Library\imgui\imgui.cpp">
+      <Filter>Library\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\GameObject\FirstEnemy.cpp">
+      <Filter>Src\Application\Game\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\GameObject\SecondEnemy.cpp">
+      <Filter>Src\Application\Game\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\System\Shader\EffectShader\inc_KdEffectShader.hlsli">
@@ -361,8 +439,11 @@
     <None Include="Src\System\Shader\StandardShader\inc_KdStandardShader.hlsli">
       <Filter>Src\System\Shader\StandardShader</Filter>
     </None>
-    <None Include="Src\System\Shader\TranslucentShader\inc_KdTranslucentShader.hlsli">
+    <None Include="Src\System\Shader\TranslucentShader\inc_TranslucentShader.hlsli">
       <Filter>Src\System\Shader\TranslucentShader</Filter>
+    </None>
+    <None Include="Src\System\Shader\GenerateShadowMap\inc_GenerateShadowMapShader.hlsli">
+      <Filter>Src\System\Shader\GenerateShadowMap</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -387,14 +468,20 @@
     <FxCompile Include="Src\System\Shader\StandardShader\KdStandardShader_VS_Skin.hlsl">
       <Filter>Src\System\Shader\StandardShader</Filter>
     </FxCompile>
-    <FxCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader_PS.hlsl">
+    <FxCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader_PS.hlsl">
       <Filter>Src\System\Shader\TranslucentShader</Filter>
     </FxCompile>
-    <FxCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader_VS.hlsl">
+    <FxCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader_VS.hlsl">
       <Filter>Src\System\Shader\TranslucentShader</Filter>
     </FxCompile>
-    <FxCompile Include="Src\System\Shader\TranslucentShader\KdTranslucentShader_VS_Skin.hlsl">
+    <FxCompile Include="Src\System\Shader\TranslucentShader\TranslucentShader_VS_Skin.hlsl">
       <Filter>Src\System\Shader\TranslucentShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMap_PS.hlsl">
+      <Filter>Src\System\Shader\GenerateShadowMap</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\System\Shader\GenerateShadowMap\GenerateShadowMap_VS.hlsl">
+      <Filter>Src\System\Shader\GenerateShadowMap</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

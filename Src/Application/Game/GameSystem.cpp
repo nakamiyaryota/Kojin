@@ -4,7 +4,6 @@
 #include "GameObject/Player.h"
 #include "Camera/TPSCamera.h"
 #include "GameObject/Effect2D.h"
-#include "GameObject/Enemy.h"
 
 #include "GameObject/Scene/TitleObject/TitleObject.h"
 #include "GameObject/Scene/ResultObject/ResultObject.h"
@@ -12,6 +11,21 @@
 
 // プログラム開始時に一度だけ確保＆初期化
 const float GameSystem::s_worldGravity = 0.01f;
+
+void GameSystem::ImGuiProcess()
+{
+#ifdef _DEBUG
+	if (ImGui::Begin("GameSystem"))
+	{
+		for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
+		{
+			spObject->ImGuiProcess();
+		}
+
+		ImGui::End();
+	}
+#endif
+}
 
 void GameSystem::TitleInit()
 {
@@ -123,9 +137,19 @@ void GameSystem::Update()
 
 	if (GameSystem::GetInstance().GetInputController().GetKeyState("End") & eKeyPress)
 	{
-		if (MessageBoxA(APP.m_window.GetWndHandle(), "本当にゲームを終了しますか？", "確認", MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDYES)
+		if (m_nextSceneName != "Game")
 		{
-			APP.End();
+			if (MessageBoxA(APP.m_window.GetWndHandle(), "本当にゲームを終了しますか？", "確認", MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDYES)
+			{
+				APP.End();
+			}
+		}
+		if (m_nextSceneName == "Game")
+		{
+			if (MessageBoxA(APP.m_window.GetWndHandle(), "タイトルへ戻りますか？", "確認", MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDYES)
+			{
+				GameSystem::GetInstance().RequestChangeScene("Title");
+			}
 		}
 	}
 
@@ -189,7 +213,7 @@ void GameSystem::Update()
 	{
 		if (!(*objItr)->IsAlive())
 		{
-			// スマートポインタは解放は自動で行われる
+			// スマートポインタの解放は自動で行われる
 			objItr->reset();
 
 			objItr = m_spGameObjects.erase(objItr);
@@ -219,14 +243,31 @@ void GameSystem::Draw()
 		m_spCamera->SetToShader();
 	}
 
+	// 影用の深度情報マップ作成
+	// レンダーターゲットの切り替え + パイプラインの切り替え
+	SHADER->m_genShadowMapShader.Begin();
+
+	for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
+	{
+		spObject->DrawShadowMap();
+	}
+
+	// 変更前のレンダーターゲット復帰
+	SHADER->m_genShadowMapShader.End();
+
 	// 不透明物から描画
 	SHADER->m_standardShader.SetToDevice();
+
+	D3D.WorkDevContext()->PSSetShaderResources(10, 1, SHADER->m_genShadowMapShader.GetDLShadowMap()->WorkSRViewAddress());
 
 	// ゲームオブジェクトの描画
 	for (std::shared_ptr<GameObject>& spObject : m_spGameObjects)
 	{
 		spObject->Draw();
 	}
+
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	D3D.WorkDevContext()->PSSetShaderResources(10, 1, &nullSRV);
 
 	SHADER->m_effectShader.SetToDevice();
 	SHADER->m_effectShader.DrawModel(m_sky, m_skyMat);

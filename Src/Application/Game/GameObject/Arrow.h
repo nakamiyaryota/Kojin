@@ -21,6 +21,8 @@ public:
 	// Xç¿ïWÇÃÇ›ê›íË
 	void SetPosX(const float& x) { SetPos(Math::Vector3(x, m_mWorld._42, m_mWorld._43)); }
 
+	void SetChange(bool flg = false) { m_change = flg; }
+
 	const GameObject::ClassID GetClassID() const override
 	{
 		return GameObject::eArrow;

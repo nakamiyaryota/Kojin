@@ -106,18 +106,18 @@ LRESULT CALLBACK KdWindow::callWindowProc(HWND hWnd, UINT message, WPARAM wParam
 	// nullptrの場合は、デフォルト処理を実行
 	if (pThis == nullptr) {
 		switch (message) {
-			case WM_CREATE:
-			{
-				// CreateWindow()で渡したパラメータを取得
-				CREATESTRUCT * createStruct = (CREATESTRUCT*)lParam;
-				KdWindow* window = (KdWindow*)createStruct->lpCreateParams;
+		case WM_CREATE:
+		{
+			// CreateWindow()で渡したパラメータを取得
+			CREATESTRUCT* createStruct = (CREATESTRUCT*)lParam;
+			KdWindow* window = (KdWindow*)createStruct->lpCreateParams;
 
-				// ウィンドウプロパティにこのクラスのインスタンスアドレスを埋め込んでおく
-				// 次回から、pThis->WindowProcの方へ処理が流れていく
-				SetProp(hWnd, L"GameWindowInstance", window);
+			// ウィンドウプロパティにこのクラスのインスタンスアドレスを埋め込んでおく
+			// 次回から、pThis->WindowProcの方へ処理が流れていく
+			SetProp(hWnd, L"GameWindowInstance", window);
 
-			}
-			return 0;
+		}
+		return 0;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
@@ -127,25 +127,33 @@ LRESULT CALLBACK KdWindow::callWindowProc(HWND hWnd, UINT message, WPARAM wParam
 	return pThis->WindowProc(hWnd, message, wParam, lParam);
 }
 
+// imgui
+LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 // ウィンドウ関数
 LRESULT KdWindow::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// ImGuiにイベント通知
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam)) {
+		return true;
+	}
+
 	//===================================
 	//メッセージによって処理を選択
 	//===================================
 	switch (message) {
-	// ホイールスクロール時
+		// ホイールスクロール時
 	case WM_MOUSEWHEEL:
-		{
-			m_mouseWheelVal = (short)HIWORD(wParam);
-		}
-		break;
+	{
+		m_mouseWheelVal = (short)HIWORD(wParam);
+	}
+	break;
 	// Xボタンが押された
 	case WM_CLOSE:
 		// 破棄
 		Release();
 		break;
-	// ウィンドウ破棄直前
+		// ウィンドウ破棄直前
 	case WM_DESTROY:
 		RemoveProp(hWnd, L"GameWindowInstance");
 		PostQuitMessage(0);

@@ -31,5 +31,5 @@ cbuffer cbLight : register(b8)
 	// 平行光
 	float3  g_DL_Dir;    // 光の方向
 	float3  g_DL_Color;  // 光の色
-	row_major float4x4  g_DL_mLightVP;  // 平行光のビュー行列 x 射影行列
+	row_major float4x4  g_DL_mViewProj;  // 平行光のビュー行列 x 射影行列
 };

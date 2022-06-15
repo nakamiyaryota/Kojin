@@ -1,8 +1,8 @@
 #include "System/KdSystem.h"
 
-#include "KdTranslucentShader.h"
+#include "TranslucentShader.h"
 
-void KdTranslucentShader::SetToDevice()
+void TranslucentShader::SetToDevice()
 {
 	D3D.WorkDevContext()->PSSetShader(m_PS, 0, 0);
 
@@ -17,7 +17,7 @@ void KdTranslucentShader::SetToDevice()
 	D3D.WorkDevContext()->PSSetConstantBuffers(2, 1, m_cb2_Bones.GetAddress());
 }
 
-void KdTranslucentShader::DrawMesh(const KdMesh* mesh, const std::vector<KdMaterial>& materials)
+void TranslucentShader::DrawMesh(const KdMesh* mesh, const std::vector<KdMaterial>& materials)
 {
 	if (mesh == nullptr)return;
 
@@ -85,7 +85,7 @@ void KdTranslucentShader::DrawMesh(const KdMesh* mesh, const std::vector<KdMater
 	}
 }
 
-void KdTranslucentShader::DrawModel(const KdModelWork& rModel, const Math::Matrix& mWorld)
+void TranslucentShader::DrawModel(const KdModelWork& rModel, const Math::Matrix& mWorld)
 {
 	// 有効じゃないときはスキップ
 	if (!rModel.IsEnable()) { return; }
@@ -130,14 +130,14 @@ void KdTranslucentShader::DrawModel(const KdModelWork& rModel, const Math::Matri
 	}
 }
 
-bool KdTranslucentShader::Init()
+bool TranslucentShader::Init()
 {
 	//-------------------------------------
 	// 頂点シェーダ
 	//-------------------------------------
 	{
 		// コンパイル済みのシェーダーヘッダーファイルをインクルード
-		#include "KdTranslucentShader_VS.inc"
+		#include "TranslucentShader_VS.inc"
 
 		// 頂点シェーダー作成
 		if (FAILED(D3D.WorkDev()->CreateVertexShader(compiledBuffer, sizeof(compiledBuffer), nullptr, &m_VS))) {
@@ -172,7 +172,7 @@ bool KdTranslucentShader::Init()
 	//-------------------------------------
 	{
 		// コンパイル済みのシェーダーヘッダーファイルをインクルード
-		#include "KdTranslucentShader_VS_Skin.inc"
+		#include "TranslucentShader_VS_Skin.inc"
 
 		// 頂点シェーダー作成
 		if (FAILED(D3D.WorkDev()->CreateVertexShader(compiledBuffer, sizeof(compiledBuffer), nullptr, &m_VS_Skin))) {
@@ -210,7 +210,7 @@ bool KdTranslucentShader::Init()
 	//-------------------------------------
 	{
 		// コンパイル済みのシェーダーヘッダーファイルをインクルード
-		#include "KdTranslucentShader_PS.inc"
+		#include "TranslucentShader_PS.inc"
 
 		if (FAILED(D3D.WorkDev()->CreatePixelShader(compiledBuffer, sizeof(compiledBuffer), nullptr, &m_PS))) {
 			assert(0 && "ピクセルシェーダー作成失敗");
@@ -229,7 +229,7 @@ bool KdTranslucentShader::Init()
 	return true;
 }
 
-void KdTranslucentShader::Release()
+void TranslucentShader::Release()
 {
 	KdSafeRelease(m_VS);
 	KdSafeRelease(m_VS_Skin);

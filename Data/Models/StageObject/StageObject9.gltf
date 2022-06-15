@@ -10,7 +10,8 @@
             "nodes" : [
                 0,
                 1,
-                2
+                2,
+                3
             ]
         }
     ],
@@ -46,10 +47,19 @@
         {
             "mesh" : 0,
             "name" : "Cube",
-            "scale" : [
-                12,
-                1,
-                8
+            "translation" : [
+                0.5,
+                -0.5,
+                -0.5
+            ]
+        },
+        {
+            "mesh" : 1,
+            "name" : "Cube.001",
+            "translation" : [
+                -5.5,
+                -0.5,
+                -0.5
             ]
         }
     ],
@@ -74,13 +84,27 @@
     ],
     "meshes" : [
         {
-            "name" : "Cube.001",
+            "name" : "Cube",
             "primitives" : [
                 {
                     "attributes" : {
                         "POSITION" : 0,
                         "NORMAL" : 1,
                         "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Cube.015",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
                     },
                     "indices" : 3,
                     "material" : 0
@@ -96,71 +120,114 @@
     "images" : [
         {
             "mimeType" : "image/png",
-            "name" : "stone",
-            "uri" : "stone.png"
+            "name" : "block",
+            "uri" : "block.png"
         }
     ],
     "accessors" : [
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 24,
+            "count" : 1152,
             "max" : [
+                5.5,
                 0.5,
-                0.5,
-                0.5
+                4.5
             ],
             "min" : [
                 -0.5,
                 -0.5,
-                -0.5
+                -3.5
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 24,
+            "count" : 1152,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 24,
+            "count" : 1152,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 36,
+            "count" : 1728,
             "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 1152,
+            "max" : [
+                5.5,
+                0.5,
+                4.5
+            ],
+            "min" : [
+                -0.5,
+                -0.5,
+                -3.5
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 1152,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 1152,
+            "type" : "VEC2"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 288,
+            "byteLength" : 13824,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 288,
-            "byteOffset" : 288
+            "byteLength" : 13824,
+            "byteOffset" : 13824
         },
         {
             "buffer" : 0,
-            "byteLength" : 192,
-            "byteOffset" : 576
+            "byteLength" : 9216,
+            "byteOffset" : 27648
         },
         {
             "buffer" : 0,
-            "byteLength" : 72,
-            "byteOffset" : 768
+            "byteLength" : 3456,
+            "byteOffset" : 36864
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 13824,
+            "byteOffset" : 40320
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 13824,
+            "byteOffset" : 54144
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 9216,
+            "byteOffset" : 67968
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 840,
+            "byteLength" : 77184,
             "uri" : "StageObject9.bin"
         }
     ]

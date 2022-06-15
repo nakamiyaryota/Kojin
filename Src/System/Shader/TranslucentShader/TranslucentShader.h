@@ -6,7 +6,7 @@
 // 基本シェーダ
 //
 //============================================================
-class KdTranslucentShader
+class TranslucentShader
 {
 	struct cbObject;
 	struct cbMaterial;
@@ -96,7 +96,7 @@ public:
 	// 解放
 	void Release();
 	// 
-	~KdTranslucentShader()
+	~TranslucentShader()
 	{
 		Release();
 	}

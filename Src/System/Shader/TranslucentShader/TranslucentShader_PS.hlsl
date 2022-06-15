@@ -1,5 +1,5 @@
 #include "../inc_KdCommon.hlsli"
-#include "inc_KdTranslucentShader.hlsli"
+#include "inc_TranslucentShader.hlsli"
 
 // テクスチャ
 Texture2D g_baseTex : register(t0);		// ベースカラーテクスチャ

@@ -7,6 +7,8 @@ class GameSystem
 {
 public:
 
+	void ImGuiProcess();
+
 	void TitleInit();
 	void GameInit();
 	void ResultInit();

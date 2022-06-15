@@ -1,5 +1,10 @@
 ﻿#include "GameObject.h"
 
+void GameObject::DrawShadowMap()
+{
+	SHADER->m_genShadowMapShader.DrawModel(m_modelWork, m_mWorld);
+}
+
 void GameObject::Draw()
 {
 	SHADER->m_standardShader.DrawModel(m_modelWork, m_mWorld);
@@ -13,20 +18,20 @@ void GameObject::Change3D()
 		m_mWorld *= scale;
 	}
 
-	SetPos(Math::Vector3(m_Cpos.x, m_mWorld._42, m_mWorld._43));
+	SetPos(Math::Vector3(m_keepPos.x, m_mWorld._42, m_mWorld._43));
 	
 	m_change = true;
 }
 
 void GameObject::Change2D()
 {
-	m_Cpos = m_mWorld.Translation();
+	m_keepPos = m_mWorld.Translation();
 
 	Math::Matrix scale = Math::Matrix::CreateScale(100.0f, 1.0f, 1.0f);
 	m_mWorld *= scale;
 
 	
-	SetPos(Math::Vector3(m_Cpos.x, m_mWorld._42, m_mWorld._43));
+	SetPos(Math::Vector3(m_keepPos.x, m_mWorld._42, m_mWorld._43));
 
 	m_change = false;
 }

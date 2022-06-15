@@ -1,5 +1,4 @@
 #include "Arrow.h"
-#include "Enemy.h"
 
 #include "Effect2D.h"
 
@@ -41,14 +40,14 @@ void Arrow::DrawEffect()
 
 void Arrow::Change3D()
 {
-	SetPos(Math::Vector3(m_Cpos.x, m_mWorld._42, m_mWorld._43));
+	SetPos(Math::Vector3(m_keepPos.x, m_mWorld._42, m_mWorld._43));
 
 	m_change = true;
 }
 
 void Arrow::Change2D()
 {
-	m_Cpos = m_mWorld.Translation();
+	m_keepPos = m_mWorld.Translation();
 
 	for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
 	{
@@ -119,6 +118,11 @@ void Arrow::UpdateCollision()
 		// Ž©•ª‚Æ“–‚½‚é‘ÎÛ‚ÉŒÄ‚Ño‚µ‚Ä‚à‚ç‚¤
 		if (spObject->CheckCollisionBump(rayInfo, result))
 		{
+			if (GameSystem::GetInstance().GetSceneName() != "Game") { return; }
+
+			Math::Vector3 pos = GetPos();
+			pos.z += 0.2;
+
 			m_isHit = true;
 		}
 	}

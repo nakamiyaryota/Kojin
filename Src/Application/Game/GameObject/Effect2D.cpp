@@ -6,8 +6,6 @@ void Effect2D::Init()
 
 void Effect2D::Update()
 {
-	UpdateCollision();
-
 	// アニメーションが無い or ループアニメーション
 	if (m_poly.GetAnimationSize() <= 1 || m_isLoop)
 	{
@@ -81,31 +79,4 @@ void Effect2D::SetAnimation(int splitX, int splitY, float speed, bool isLoop)
 	// アニメーションの設定
 	m_animSpd = speed;
 	m_isLoop = isLoop;
-}
-
-void Effect2D::UpdateCollision()
-{
-	if (m_changeDir)
-	{
-		for (const std::shared_ptr<GameObject>& spObject : GameSystem::GetInstance().GetObjects())
-		{
-			if (spObject->GetClassID() != GameObject::eStage &&
-				spObject->GetClassID() != GameObject::eStageObject &&
-				spObject->GetClassID() != GameObject::eStageObjectFix) {
-				continue;
-			}
-
-			Math::Vector3 rayPos = m_mWorld.Translation();
-			rayPos.y += 0.5f;
-
-			RayInfo rayInfo(rayPos, Math::Vector3(0.0f, -1.0f, 0.0f), 1.0f);
-
-			BumpResult bumpResult;
-
-			if (!spObject->CheckCollisionBump(rayInfo, bumpResult))
-			{
-				//m_isAlive = false;
-			}
-		}
-	}
 }

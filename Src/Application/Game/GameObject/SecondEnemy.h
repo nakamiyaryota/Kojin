@@ -1,20 +1,20 @@
-﻿#pragma once
+#pragma once
 #include "GameObject.h"
 
-class Enemy : public GameObject
+class SecondEnemy : public GameObject
 {
 public:
-	Enemy() {}
-	~Enemy() { Release(); }
+	SecondEnemy() {}
+	~SecondEnemy() { Release(); }
 
 	void Init() override;
 	void Update() override;
 	void Change3D() override;
 	void Change2D() override;
 
-	// 場所の設定
+	// �ꏊ�̐ݒ�
 	void SetWorldMatrix(float x, float z, float y = 0.0f) {
-		m_mWorld = Math::Matrix::CreateTranslation(x, y, z); 
+		m_mWorld = Math::Matrix::CreateTranslation(x, y, z);
 	}
 
 	void SetPos(const Math::Vector3& pos) override
